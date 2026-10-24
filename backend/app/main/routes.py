@@ -7,14 +7,16 @@ from app.models import ServiceCategory, Worker, Review, Booking
 @main_bp.route("/")
 def index():
     categories = ServiceCategory.query.filter_by(is_active=True).all()
-    # Stats for the hero section (real counts)
+    # Stats for the hero section
     worker_count = Worker.query.filter_by(is_active=True).count()
     booking_count = Booking.query.filter_by(status="completed").count()
     review_count = Review.query.count()
+    top_workers = Worker.query.filter_by(is_active=True).limit(3).all()
     return render_template(
         "main/index.html",
         categories=categories,
         worker_count=worker_count,
         booking_count=booking_count,
         review_count=review_count,
+        top_workers=top_workers,
     )

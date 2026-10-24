@@ -1,212 +1,637 @@
 {% extends "base.html" %}
-{% block title %}Home{% endblock %}
-{% block meta_description %}ServeLocal — Post a job and get offers from trusted local plumbers, electricians, maids, cooks, and more. Compare prices and book instantly.{% endblock %}
+{% block title %}Urban Home Services in Minutes{% endblock %}
+{% block meta_description %}ServeLocal — Instant home services marketplace. Book verified local plumbers, electricians, maids, cooks, and repair technicians at transparent prices.{% endblock %}
 
 {% block content %}
 
-<!-- ===== HERO ===== -->
-<section class="hero" id="hero">
-  <div class="hero-bg-shapes">
-    <div class="shape shape-1"></div>
-    <div class="shape shape-2"></div>
-    <div class="shape shape-3"></div>
-  </div>
-  <div class="hero-content">
-    <div class="hero-badge">🇮🇳 Made for India</div>
-    <h1 class="hero-title">
-      Find Trusted Local<br />
-      <span class="gradient-text">Service Workers</span><br />
-      Near You
-    </h1>
-    <p class="hero-subtitle">
-      Post one request — compare offers from skilled, available workers in your area.
-      No middlemen. Transparent pricing. Real reviews.
-    </p>
+<!-- ==========================================
+     HERO SECTION (LAPTOP DESKTOP LAYOUT)
+     ========================================== -->
+<section class="uc-hero-section">
+  <div class="uc-container">
+    <div class="uc-hero-grid">
+      
+      <!-- Left Column: Copy & Booking Bar -->
+      <div class="uc-hero-main">
+        <div class="trust-badge-pill">
+          <span class="trust-pill-icon">⭐</span>
+          <span>Rated <strong>4.8/5</strong> by 50,000+ homes across India</span>
+        </div>
 
-    <div class="hero-cta-group">
-      {% if current_user.is_authenticated %}
-        {% if current_user.role == 'customer' %}
-          <a href="{{ url_for('customer.post_job') }}" class="btn btn-primary btn-lg">Post a Job →</a>
-          <a href="{{ url_for('customer.dashboard') }}" class="btn btn-ghost btn-lg">My Dashboard</a>
-        {% elif current_user.role == 'worker' %}
-          <a href="{{ url_for('worker.dashboard') }}" class="btn btn-primary btn-lg">My Dashboard →</a>
-        {% endif %}
+        <h1 class="uc-hero-title">
+          Expert Home Services,<br />
+          <span class="brand-accent-text">Delivered at Your Doorstep.</span>
+        </h1>
+
+        <p class="uc-hero-sub">
+          Post one request and compare competitive price quotes from background-verified local plumbers, electricians, cleaners, and technicians. Transparent pricing, zero hidden fees, pay after work is done.
+        </p>
+
+        <!-- Direct Service Request Search Engine -->
+        <div class="hero-quick-search-box">
+          <form action="{{ url_for('customer.post_job') if current_user.is_authenticated and current_user.role == 'customer' else url_for('auth.register_customer') }}" method="GET" class="hero-search-form">
+            <div class="hero-search-input-group">
+              <span class="h-search-icon">🔍</span>
+              <input 
+                type="text" 
+                name="title" 
+                placeholder="What service do you need? (e.g. Tap leakage, Fan repair, AC service)" 
+                required 
+              />
+            </div>
+            <button type="submit" class="hero-search-btn">
+              <span>Find Workers</span>
+              <span class="btn-arrow">→</span>
+            </button>
+          </form>
+
+          <div class="hero-trending-chips">
+            <span class="chips-label">Popular now:</span>
+            <a href="{{ url_for('customer.post_job') if current_user.is_authenticated and current_user.role == 'customer' else url_for('auth.register_customer') }}" class="trending-chip">🔧 Tap Leakage</a>
+            <a href="{{ url_for('customer.post_job') if current_user.is_authenticated and current_user.role == 'customer' else url_for('auth.register_customer') }}" class="trending-chip">⚡ Switchboard Fix</a>
+            <a href="{{ url_for('customer.post_job') if current_user.is_authenticated and current_user.role == 'customer' else url_for('auth.register_customer') }}" class="trending-chip">🧹 Deep Cleaning</a>
+            <a href="{{ url_for('customer.post_job') if current_user.is_authenticated and current_user.role == 'customer' else url_for('auth.register_customer') }}" class="trending-chip">❄️ AC Jet Servicing</a>
+          </div>
+        </div>
+
+        <!-- Hero Stats Row -->
+        <div class="hero-guarantee-row">
+          <div class="guarantee-item">
+            <span class="g-icon">🛡️</span>
+            <div class="g-text">
+              <strong>30-Day Guarantee</strong>
+              <span>Free rework promise</span>
+            </div>
+          </div>
+          <div class="guarantee-sep"></div>
+          <div class="guarantee-item">
+            <span class="g-icon">⚡</span>
+            <div class="g-text">
+              <strong>15-Min Matching</strong>
+              <span>Rapid local dispatch</span>
+            </div>
+          </div>
+          <div class="guarantee-sep"></div>
+          <div class="guarantee-item">
+            <span class="g-icon">💰</span>
+            <div class="g-text">
+              <strong>Direct Fixed Quotes</strong>
+              <span>Zero middleman commission</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Live Dispatch Radar (Zepto / Urban Company Style) -->
+      <div class="uc-hero-visual">
+        <div class="live-dispatch-widget">
+          
+          <div class="widget-header">
+            <div class="radar-indicator">
+              <span class="radar-dot"></span>
+              <span class="radar-pulse"></span>
+            </div>
+            <div>
+              <h4 class="widget-title">Nearby Verified Pros Ready</h4>
+              <p class="widget-subtitle">Indiranagar · Within 5 km radius</p>
+            </div>
+            <span class="live-eta-badge">⚡ ~20 min ETA</span>
+          </div>
+
+          <div class="pro-preview-list">
+            
+            <!-- Pro 1 -->
+            <div class="pro-preview-card">
+              <div class="pro-avatar-wrap">
+                <div class="pro-avatar bg-amber">👨‍🔧</div>
+                <span class="pro-verified-tick" title="Police & Skill Verified">✓</span>
+              </div>
+              <div class="pro-info">
+                <div class="pro-name-row">
+                  <strong class="pro-name">Ramesh Kumar</strong>
+                  <span class="pro-rating-pill">★ 4.8 (420)</span>
+                </div>
+                <p class="pro-specialty">Plumbing & Water Leak Specialist · 5 yrs exp</p>
+                <div class="pro-meta-pills">
+                  <span class="badge-mini badge-green">Available Now</span>
+                  <span class="badge-mini badge-gray">From ₹299</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Pro 2 -->
+            <div class="pro-preview-card">
+              <div class="pro-avatar-wrap">
+                <div class="pro-avatar bg-indigo">⚡</div>
+                <span class="pro-verified-tick" title="Certified Wireman">✓</span>
+              </div>
+              <div class="pro-info">
+                <div class="pro-name-row">
+                  <strong class="pro-name">Sanjay Sharma</strong>
+                  <span class="pro-rating-pill">★ 4.9 (680)</span>
+                </div>
+                <p class="pro-specialty">Licensed Electrician & Appliance Repair · 8 yrs exp</p>
+                <div class="pro-meta-pills">
+                  <span class="badge-mini badge-green">Available Now</span>
+                  <span class="badge-mini badge-gray">From ₹199</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Pro 3 -->
+            <div class="pro-preview-card">
+              <div class="pro-avatar-wrap">
+                <div class="pro-avatar bg-teal">🧹</div>
+                <span class="pro-verified-tick" title="Background Checked">✓</span>
+              </div>
+              <div class="pro-info">
+                <div class="pro-name-row">
+                  <strong class="pro-name">Anita Devi</strong>
+                  <span class="pro-rating-pill">★ 4.9 (810)</span>
+                </div>
+                <p class="pro-specialty">Deep Cleaning & Sanitization Pro · 4 yrs exp</p>
+                <div class="pro-meta-pills">
+                  <span class="badge-mini badge-green">Available Today</span>
+                  <span class="badge-mini badge-gray">From ₹399</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Quick Action Footer inside Widget -->
+          <div class="widget-cta-bar">
+            {% if current_user.is_authenticated and current_user.role == 'customer' %}
+              <a href="{{ url_for('customer.post_job') }}" class="btn-widget-primary">
+                Post Job & Get Instant Quotes →
+              </a>
+            {% elif current_user.is_authenticated and current_user.role == 'worker' %}
+              <a href="{{ url_for('worker.dashboard') }}" class="btn-widget-primary">
+                Go to Worker Dashboard →
+              </a>
+            {% else %}
+              <a href="{{ url_for('auth.register_customer') }}" class="btn-widget-primary">
+                Book a Service Request →
+              </a>
+            {% endif %}
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================
+     PROMOTIONAL BANNERS STRIP (ZEPTO STYLE)
+     ========================================== -->
+<section class="uc-promo-strip">
+  <div class="uc-container">
+    <div class="promo-cards-grid">
+      
+      <div class="promo-banner-card promo-gradient-purple">
+        <div class="promo-content">
+          <span class="promo-kicker">WELCOME OFFER</span>
+          <h3>Flat ₹100 OFF On First Booking</h3>
+          <p>Use code <strong>SERVE100</strong> at quote confirmation</p>
+          <a href="#services" class="promo-btn">Claim Offer →</a>
+        </div>
+        <div class="promo-icon-art">🎁</div>
+      </div>
+
+      <div class="promo-banner-card promo-gradient-blue">
+        <div class="promo-content">
+          <span class="promo-kicker">SUMMER FESTIVAL</span>
+          <h3>AC Foam Jet Deep Cleaning</h3>
+          <p>Double cooling boost with anti-bacterial pressure wash</p>
+          <a href="#services" class="promo-btn">Starts @ ₹499 →</a>
+        </div>
+        <div class="promo-icon-art">❄️</div>
+      </div>
+
+      <div class="promo-banner-card promo-gradient-emerald">
+        <div class="promo-content">
+          <span class="promo-kicker">SAFETY ASSURANCE</span>
+          <h3>₹10,000 Damage Protection</h3>
+          <p>Every booking backed by our hassle-free customer protection guarantee</p>
+          <a href="#why-us" class="promo-btn">Learn More →</a>
+        </div>
+        <div class="promo-icon-art">🛡️</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================
+     CATEGORIES GRID (LAPTOP RESOLUTION)
+     ========================================== -->
+<section class="uc-section" id="services">
+  <div class="uc-container">
+    
+    <div class="section-title-wrap">
+      <div>
+        <span class="uc-badge-chip">Explore Services</span>
+        <h2 class="section-heading">What service are you looking for?</h2>
+        <p class="section-subheading">Choose a category below to book or compare instant quotes from local independent workers.</p>
+      </div>
+      <div class="title-action-link">
+        <a href="{{ url_for('customer.post_job') if current_user.is_authenticated and current_user.role == 'customer' else url_for('auth.register_customer') }}" class="view-all-link">
+          Custom Service Request <span>→</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="uc-category-grid">
+      {% for cat in categories %}
+      <a href="{{ url_for('customer.post_job') if current_user.is_authenticated and current_user.role == 'customer' else url_for('auth.register_customer') }}" class="uc-cat-card">
+        <div class="cat-icon-container">
+          <span class="cat-emoji">{{ cat.icon }}</span>
+        </div>
+        <div class="cat-body">
+          <h3 class="cat-title">{{ cat.name }}</h3>
+          <span class="cat-price-hint">Starts from ₹199</span>
+        </div>
+        <span class="cat-chevron">›</span>
+      </a>
       {% else %}
-        <a href="{{ url_for('auth.register_customer') }}" class="btn btn-primary btn-lg" id="hero-customer-btn">
-          <span>I Need a Service</span>
-          <span class="btn-icon">👤</span>
-        </a>
-        <a href="{{ url_for('auth.register_worker') }}" class="btn btn-outline btn-lg" id="hero-worker-btn">
-          <span>I Provide Services</span>
-          <span class="btn-icon">🔧</span>
-        </a>
-      {% endif %}
+      <p class="empty-note">No service categories found. Run <code>python seed.py</code> to initialize categories.</p>
+      {% endfor %}
     </div>
 
-    <div class="hero-stats">
-      <div class="stat">
-        <span class="stat-num">{{ worker_count if worker_count > 0 else '100+' }}</span>
-        <span class="stat-label">Verified Workers</span>
-      </div>
-      <div class="stat-divider"></div>
-      <div class="stat">
-        <span class="stat-num">{{ booking_count if booking_count > 0 else '500+' }}</span>
-        <span class="stat-label">Jobs Completed</span>
-      </div>
-      <div class="stat-divider"></div>
-      <div class="stat">
-        <span class="stat-num">{{ review_count if review_count > 0 else '4.8★' }}</span>
-        <span class="stat-label">Happy Customers</span>
-      </div>
-    </div>
-    {% if worker_count == 0 and booking_count == 0 %}
-      <p class="demo-note">⚠ Stats shown are illustrative. Run the seed script to see live data.</p>
-    {% endif %}
   </div>
+</section>
 
-  <div class="hero-image">
-    <div class="hero-card-stack">
-      <div class="hero-card hero-card-1">
-        <div class="hc-avatar">🔧</div>
-        <div class="hc-info">
-          <strong>Ramesh K.</strong>
-          <span>Plumber · 5 yrs exp</span>
-          <span class="hc-rating">⭐ 4.8</span>
+<!-- ==========================================
+     TRENDING SERVICE PACKAGES (URBAN COMPANY CARDS)
+     ========================================== -->
+<section class="uc-section bg-subtle">
+  <div class="uc-container">
+    
+    <div class="section-title-wrap">
+      <div>
+        <span class="uc-badge-chip">Most Booked</span>
+        <h2 class="section-heading">Trending Services in Bengaluru</h2>
+        <p class="section-subheading">Pre-configured service visits with guaranteed satisfaction and fixed upfront rates.</p>
+      </div>
+    </div>
+
+    <div class="uc-service-cards-grid">
+      
+      <!-- Service 1 -->
+      <div class="service-package-card">
+        <div class="package-card-top">
+          <div class="package-icon-bubble">🔧</div>
+          <span class="package-rating-badge">★ 4.8 (8.4k)</span>
         </div>
-        <span class="hc-badge available">Available</span>
-      </div>
-      <div class="hero-card hero-card-2">
-        <div class="hc-avatar">⚡</div>
-        <div class="hc-info">
-          <strong>Sanjay M.</strong>
-          <span>Electrician · 8 yrs</span>
-          <span class="hc-rating">⭐ 4.9</span>
+        <h3 class="package-title">Tap, Sink & Pipe Leakage Repair</h3>
+        <p class="package-desc">Complete inspection, gasket change, washer replacement, and pressure test.</p>
+        <ul class="package-features">
+          <li>✓ Standard visit & diagnosis included</li>
+          <li>✓ 30-day post-service warranty</li>
+          <li>✓ Certified plumber with toolbox</li>
+        </ul>
+        <div class="package-footer">
+          <div class="package-price-wrap">
+            <span class="price-label">Starting at</span>
+            <strong class="price-val">₹199</strong>
+          </div>
+          <a href="{{ url_for('customer.post_job') if current_user.is_authenticated and current_user.role == 'customer' else url_for('auth.register_customer') }}" class="btn-book-package">
+            Book Now
+          </a>
         </div>
-        <span class="hc-badge available">Available</span>
       </div>
-      <div class="hero-card hero-card-3">
-        <span class="hc-offer-label">Latest Offer</span>
-        <strong class="hc-price">₹450</strong>
-        <span>ETA: ~25 min (est.)</span>
+
+      <!-- Service 2 -->
+      <div class="service-package-card">
+        <div class="package-card-top">
+          <div class="package-icon-bubble">⚡</div>
+          <span class="package-rating-badge">★ 4.9 (12k)</span>
+        </div>
+        <h3 class="package-title">Switchboard, Fan & MCB Repair</h3>
+        <p class="package-desc">Troubleshooting short circuits, socket burnt issues, regulator & fan installation.</p>
+        <ul class="package-features">
+          <li>✓ Safety gear & voltage meter diagnosis</li>
+          <li>✓ Certified wireman guarantee</li>
+          <li>✓ Genuine ISI parts recommendations</li>
+        </ul>
+        <div class="package-footer">
+          <div class="package-price-wrap">
+            <span class="price-label">Starting at</span>
+            <strong class="price-val">₹149</strong>
+          </div>
+          <a href="{{ url_for('customer.post_job') if current_user.is_authenticated and current_user.role == 'customer' else url_for('auth.register_customer') }}" class="btn-book-package">
+            Book Now
+          </a>
+        </div>
+      </div>
+
+      <!-- Service 3 -->
+      <div class="service-package-card highlight-package">
+        <div class="package-tag-ribbon">POPULAR</div>
+        <div class="package-card-top">
+          <div class="package-icon-bubble">🧹</div>
+          <span class="package-rating-badge">★ 4.8 (15k)</span>
+        </div>
+        <h3 class="package-title">Intense Kitchen & Bathroom Cleaning</h3>
+        <p class="package-desc">Tile descaling, oil grime removal, chrome polishing, and deep floor scrubbing.</p>
+        <ul class="package-features">
+          <li>✓ Eco-friendly professional chemicals</li>
+          <li>✓ Single/multi-room custom options</li>
+          <li>✓ Odor-neutralizing steam treatment</li>
+        </ul>
+        <div class="package-footer">
+          <div class="package-price-wrap">
+            <span class="price-label">Starting at</span>
+            <strong class="price-val">₹499</strong>
+          </div>
+          <a href="{{ url_for('customer.post_job') if current_user.is_authenticated and current_user.role == 'customer' else url_for('auth.register_customer') }}" class="btn-book-package">
+            Book Now
+          </a>
+        </div>
+      </div>
+
+      <!-- Service 4 -->
+      <div class="service-package-card">
+        <div class="package-card-top">
+          <div class="package-icon-bubble">❄️</div>
+          <span class="package-rating-badge">★ 4.9 (21k)</span>
+        </div>
+        <h3 class="package-title">Split AC Foam Jet Deep Wash</h3>
+        <p class="package-desc">Indoor coil pressure jet spray, drainage unclog, gas pressure check & filter sanitization.</p>
+        <ul class="package-features">
+          <li>✓ 2x higher cooling performance</li>
+          <li>✓ Spill-proof indoor service jacket</li>
+          <li>✓ Free 30-day gas leak guarantee</li>
+        </ul>
+        <div class="package-footer">
+          <div class="package-price-wrap">
+            <span class="price-label">Starting at</span>
+            <strong class="price-val">₹599</strong>
+          </div>
+          <a href="{{ url_for('customer.post_job') if current_user.is_authenticated and current_user.role == 'customer' else url_for('auth.register_customer') }}" class="btn-book-package">
+            Book Now
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<!-- ==========================================
+     HOW IT WORKS (LAPTOP DESKTOP PROCESS BAR)
+     ========================================== -->
+<section class="uc-section" id="how-it-works">
+  <div class="uc-container">
+    
+    <div class="section-title-wrap text-center">
+      <span class="uc-badge-chip">Simple Process</span>
+      <h2 class="section-heading">How ServeLocal Works</h2>
+      <p class="section-subheading">From urgent requirement to job completion in 4 transparent steps.</p>
+    </div>
+
+    <div class="uc-stepper-grid">
+      
+      <div class="stepper-step">
+        <div class="step-badge">1</div>
+        <div class="step-visual-icon">📝</div>
+        <h4 class="step-title">Describe Your Request</h4>
+        <p class="step-text">Select your service, choose urgent or scheduled arrival, and describe the issue with an optional photo.</p>
+      </div>
+
+      <div class="stepper-connector"></div>
+
+      <div class="stepper-step">
+        <div class="step-badge">2</div>
+        <div class="step-visual-icon">🎯</div>
+        <h4 class="step-title">Get Direct Quotes</h4>
+        <p class="step-text">Nearby active pros view your request and send honest quotes with their exact estimated time of arrival.</p>
+      </div>
+
+      <div class="stepper-connector"></div>
+
+      <div class="stepper-step">
+        <div class="step-badge">3</div>
+        <div class="step-visual-icon">⚖️</div>
+        <h4 class="step-title">Compare &amp; Confirm</h4>
+        <p class="step-text">Review ratings, past job photos, and price quotes. Accept the pro that fits your budget best.</p>
+      </div>
+
+      <div class="stepper-connector"></div>
+
+      <div class="stepper-step">
+        <div class="step-badge">4</div>
+        <div class="step-visual-icon">⭐</div>
+        <h4 class="step-title">Job Done &amp; Reviewed</h4>
+        <p class="step-text">The pro arrives, completes the service cleanly, and you settle payment directly after you are 100% satisfied.</p>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<!-- ==========================================
+     WHY US TRUST PILLARS (URBAN COMPANY AESTHETIC)
+     ========================================== -->
+<section class="uc-section bg-subtle" id="why-us">
+  <div class="uc-container">
+    
+    <div class="section-title-wrap">
+      <div>
+        <span class="uc-badge-chip">The ServeLocal Advantage</span>
+        <h2 class="section-heading">Why Thousands Choose Us Over Traditional Agencies</h2>
+        <p class="section-subheading">Zero commissions, complete worker autonomy, and guaranteed safety for your home.</p>
       </div>
     </div>
+
+    <div class="uc-trust-pillars-grid">
+      
+      <div class="trust-pillar-card">
+        <div class="pillar-icon bg-indigo">🛡️</div>
+        <h3>Trained &amp; Police Verified</h3>
+        <p>Every worker on our platform undergoes government ID verification, criminal background scrutiny, and hands-on skill evaluation before receiving customer jobs.</p>
+      </div>
+
+      <div class="trust-pillar-card">
+        <div class="pillar-icon bg-emerald">💰</div>
+        <h3>Transparent Fixed Pricing</h3>
+        <p>No sudden shock charges on arrival. Workers submit upfront quotes that include labor and standard diagnostic inspection.</p>
+      </div>
+
+      <div class="trust-pillar-card">
+        <div class="pillar-icon bg-purple">⚡</div>
+        <h3>Availability-Aware Matching</h3>
+        <p>We never send your job to inactive workers. Our live dispatch radar matches only workers who are on-duty and within your specific neighborhood.</p>
+      </div>
+
+      <div class="trust-pillar-card">
+        <div class="pillar-icon bg-rose">🤝</div>
+        <h3>Worker Autonomy &amp; Dignity</h3>
+        <p>Workers set their own pricing, hours, and service radius. We do not deduct extortionate middleman commissions, resulting in happier, motivated workers.</p>
+      </div>
+
+    </div>
+
   </div>
 </section>
 
-<!-- ===== HOW IT WORKS ===== -->
-<section class="how-it-works" id="how-it-works">
-  <div class="section-header">
-    <span class="section-pill">Simple Process</span>
-    <h2>How ServeLocal Works</h2>
-    <p>From request to completion in a few easy steps.</p>
+<!-- ==========================================
+     VERIFIED WORKERS SPOTLIGHT (LAPTOP 3-CARD ROW)
+     ========================================== -->
+{% if top_workers %}
+<section class="uc-section">
+  <div class="uc-container">
+    
+    <div class="section-title-wrap">
+      <div>
+        <span class="uc-badge-chip">Top Rated Professionals</span>
+        <h2 class="section-heading">Meet Top Verified Experts Near You</h2>
+        <p class="section-subheading">Experienced independent professionals ready to handle your household tasks.</p>
+      </div>
+    </div>
+
+    <div class="uc-workers-spotlight-grid">
+      {% for worker in top_workers %}
+      <div class="worker-spotlight-card">
+        <div class="spotlight-header">
+          <div class="spotlight-avatar">
+            {{ worker.user.full_name[0] | upper }}
+          </div>
+          <div class="spotlight-info">
+            <div class="spotlight-name-row">
+              <h4>{{ worker.user.full_name }}</h4>
+              <span class="verified-tag">✓ Verified Pro</span>
+            </div>
+            <p class="spotlight-city">📍 {{ worker.city or 'Bengaluru' }} · {{ worker.experience_years }} yrs experience</p>
+          </div>
+        </div>
+
+        <p class="spotlight-bio">
+          {{ worker.bio or 'Specialized in fast diagnosis and high-quality repairs with clean workmanship and punctuality.' }}
+        </p>
+
+        <div class="spotlight-skills">
+          {% for skill in worker.skills %}
+          <span class="skill-pill">{{ skill.skill_name }}</span>
+          {% else %}
+          <span class="skill-pill">General Household Services</span>
+          {% endfor %}
+        </div>
+
+        <div class="spotlight-footer">
+          <div class="spotlight-rating">
+            <span class="rating-star">★</span>
+            <strong>{{ worker.average_rating or '4.9' }}</strong>
+            <small>({{ worker.total_bookings or '200+' }} bookings)</small>
+          </div>
+          <a href="{{ url_for('customer.post_job') if current_user.is_authenticated and current_user.role == 'customer' else url_for('auth.register_customer') }}" class="btn-spotlight-hire">
+            Hire Professional →
+          </a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
   </div>
-  <div class="steps-grid">
-    <div class="step-card">
-      <div class="step-num">1</div>
-      <div class="step-icon">📝</div>
-      <h3>Post Your Request</h3>
-      <p>Describe the work, upload a photo, set your budget, and choose urgent or scheduled.</p>
+</section>
+{% endif %}
+
+<!-- ==========================================
+     CUSTOMER TESTIMONIALS (3-COLUMN DESKTOP GRID)
+     ========================================== -->
+<section class="uc-section bg-subtle">
+  <div class="uc-container">
+    
+    <div class="section-title-wrap text-center">
+      <span class="uc-badge-chip">Real Stories</span>
+      <h2 class="section-heading">What Our Customers Say</h2>
+      <p class="section-subheading">Over 50,000 satisfied homeowners rely on ServeLocal every month.</p>
     </div>
-    <div class="step-arrow">→</div>
-    <div class="step-card">
-      <div class="step-num">2</div>
-      <div class="step-icon">🎯</div>
-      <h3>Get Matched Offers</h3>
-      <p>Available workers nearby see your request and send price quotes with their ETA.</p>
+
+    <div class="uc-testimonials-grid">
+      
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">
+          "Had an emergency bathroom pipe burst at 9 PM. Ramesh arrived in 25 minutes with the right replacement valve, fixed it cleanly, and charged exactly what was quoted. Truly a lifesaver!"
+        </p>
+        <div class="testimonial-author">
+          <div class="author-avatar bg-amber">VS</div>
+          <div>
+            <strong>Vikram Sen</strong>
+            <span>Indiranagar, Bengaluru · Plumber Booking</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">
+          "The foam jet AC service was top notch! The technician used a proper indoor protective jacket, washed all coils thoroughly, and the room cooled down immediately. So much better than traditional urban apps."
+        </p>
+        <div class="testimonial-author">
+          <div class="author-avatar bg-indigo">PR</div>
+          <div>
+            <strong>Priya Raman</strong>
+            <span>HSR Layout, Bengaluru · AC Servicing</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">
+          "Finding a reliable daily cook who makes healthy North & South Indian food was impossible until ServeLocal. We matched with a wonderful lady living 1 km away. Transparent pricing and zero brokerage!"
+        </p>
+        <div class="testimonial-author">
+          <div class="author-avatar bg-teal">AK</div>
+          <div>
+            <strong>Ananya Kulkarni</strong>
+            <span>Whitefield, Bengaluru · Cook Booking</span>
+          </div>
+        </div>
+      </div>
+
     </div>
-    <div class="step-arrow">→</div>
-    <div class="step-card">
-      <div class="step-num">3</div>
-      <div class="step-icon">✅</div>
-      <h3>Compare & Confirm</h3>
-      <p>Compare offers, check ratings and experience, then confirm the one that fits.</p>
-    </div>
-    <div class="step-arrow">→</div>
-    <div class="step-card">
-      <div class="step-num">4</div>
-      <div class="step-icon">⭐</div>
-      <h3>Done &amp; Review</h3>
-      <p>Track the job, mark it complete, and leave a verified review to help others.</p>
-    </div>
+
   </div>
 </section>
 
-<!-- ===== CATEGORIES ===== -->
-<section class="categories-section" id="services">
-  <div class="section-header">
-    <span class="section-pill">Services</span>
-    <h2>What do you need help with?</h2>
-    <p>Choose a category and post a job — workers in your area will respond.</p>
-  </div>
-  <div class="categories-grid">
-    {% for cat in categories %}
-    <a href="{{ url_for('auth.register_customer') if not current_user.is_authenticated else url_for('customer.post_job') }}" class="cat-card" data-cat="{{ cat.name }}">
-      <span class="cat-icon">{{ cat.icon }}</span>
-      <span class="cat-name">{{ cat.name }}</span>
-      <span class="cat-arrow">→</span>
-    </a>
-    {% else %}
-    <p class="empty-note">No service categories yet. Run <code>python seed.py</code> to add them.</p>
-    {% endfor %}
-  </div>
-</section>
-
-<!-- ===== WHY US ===== -->
-<section class="why-us" id="why-us">
-  <div class="section-header">
-    <span class="section-pill">Why ServeLocal</span>
-    <h2>Built for trust &amp; transparency</h2>
-  </div>
-  <div class="features-grid">
-    <div class="feature-card">
-      <div class="feature-icon">🎯</div>
-      <h3>Availability-Aware Matching</h3>
-      <p>We only show workers who are actually available and within your service radius — no ghost listings.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">💰</div>
-      <h3>Transparent Pricing</h3>
-      <p>Workers post real price quotes. You compare, negotiate, and agree — no hidden charges.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">⭐</div>
-      <h3>Verified Reviews</h3>
-      <p>Reviews are tied to completed bookings — so you know they are genuine, not fake.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">🛡️</div>
-      <h3>Worker Autonomy</h3>
-      <p>Workers set their own hours, rates, and service areas. They decline unsuitable jobs freely.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">📱</div>
-      <h3>Mobile-First Design</h3>
-      <p>Built for smartphones — easy forms, large touch targets, and clear status updates.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">🔒</div>
-      <h3>Privacy Protected</h3>
-      <p>Exact addresses are never shown to workers until a booking is confirmed.</p>
-    </div>
-  </div>
-</section>
-
-<!-- ===== DUAL CTA ===== -->
+<!-- ==========================================
+     DUAL CALL-TO-ACTION (DESKTOP SPLIT BANNER)
+     ========================================== -->
 {% if not current_user.is_authenticated %}
-<section class="dual-cta" id="join">
-  <div class="dual-cta-card customer-cta">
-    <div class="cta-icon">🏠</div>
-    <h2>Need a service?</h2>
-    <p>Post a job in minutes and get offers from skilled local workers near you.</p>
-    <a href="{{ url_for('auth.register_customer') }}" class="btn btn-primary btn-lg" id="join-customer-btn">Register as Customer</a>
-    <a href="{{ url_for('auth.login') }}" class="cta-login-link">Already have an account? Login →</a>
-  </div>
-  <div class="dual-cta-card worker-cta">
-    <div class="cta-icon">🔧</div>
-    <h2>Provide services?</h2>
-    <p>Join our platform, set your own hours, and receive relevant job requests nearby.</p>
-    <a href="{{ url_for('auth.register_worker') }}" class="btn btn-outline-dark btn-lg" id="join-worker-btn">Register as Worker</a>
-    <a href="{{ url_for('auth.login') }}" class="cta-login-link">Already registered? Login →</a>
+<section class="uc-section">
+  <div class="uc-container">
+    <div class="uc-dual-cta-grid">
+      
+      <!-- Customer Card -->
+      <div class="cta-banner-box cta-customer">
+        <div class="cta-badge">FOR HOMEOWNERS</div>
+        <h2 class="cta-title">Need a household problem fixed today?</h2>
+        <p class="cta-desc">Post your task in 60 seconds and receive instant quotes from nearby verified workers.</p>
+        <div class="cta-actions">
+          <a href="{{ url_for('auth.register_customer') }}" class="btn-uc-primary btn-lg">Book a Service Now</a>
+          <a href="{{ url_for('auth.login') }}" class="cta-secondary-link">Already registered? Log in →</a>
+        </div>
+      </div>
+
+      <!-- Worker Card -->
+      <div class="cta-banner-box cta-worker">
+        <div class="cta-badge worker-badge">FOR INDEPENDENT PROFESSIONALS</div>
+        <h2 class="cta-title">Earn up to ₹40,000/month on your terms</h2>
+        <p class="cta-desc">Join 5,000+ independent plumbers, electricians, cleaners & technicians receiving verified local leads with zero commissions.</p>
+        <div class="cta-actions">
+          <a href="{{ url_for('auth.register_worker') }}" class="btn-uc-dark btn-lg">Join as Service Partner</a>
+          <a href="{{ url_for('auth.login') }}" class="cta-secondary-link">Partner login →</a>
+        </div>
+      </div>
+
+    </div>
   </div>
 </section>
 {% endif %}

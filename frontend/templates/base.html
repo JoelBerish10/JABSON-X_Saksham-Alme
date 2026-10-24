@@ -3,55 +3,193 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="{% block meta_description %}Hyperlocal services marketplace — connect with trusted local workers for plumbing, electrical, cleaning, and more.{% endblock %}" />
-  <title>{% block title %}ServeLocal{% endblock %} | ServeLocal</title>
+  <meta name="description" content="{% block meta_description %}ServeLocal — Instant home services marketplace. Book verified local plumbers, electricians, cleaners, carpenters, and technicians at transparent prices.{% endblock %}" />
+  <title>{% block title %}ServeLocal{% endblock %} | Instant Home Services</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
   {% block extra_head %}{% endblock %}
 </head>
-<body>
+<body class="uc-app">
 
-<!-- ========== NAV ========== -->
+<!-- ========== TOP ANNOUNCEMENT BAR ========== -->
+<div class="top-announcement-bar">
+  <div class="announcement-inner">
+    <div class="announcement-tag">
+      <span class="badge-pulsing-dot"></span>
+      <span class="announcement-highlight">Instant Dispatch</span>
+    </div>
+    <span class="announcement-text">⚡ Top-rated background checked workers ready in your locality. Flat ₹100 OFF on your first booking with code <strong>SERVE100</strong></span>
+    <a href="#services" class="announcement-link">Explore Services →</a>
+  </div>
+</div>
+
+<!-- ========== MAIN SITE HEADER ========== -->
 <header class="site-header" id="site-header">
-  <nav class="nav-container">
+  <div class="nav-container">
+    
+    <!-- Brand Logo -->
     <a href="{{ url_for('main.index') }}" class="nav-logo">
-      <span class="logo-icon">⚡</span>
-      <span class="logo-text">Serve<strong>Local</strong></span>
+      <div class="logo-mark">⚡</div>
+      <div class="logo-text-group">
+        <span class="logo-brand">Serve<strong>Local</strong></span>
+        <span class="logo-tagline">HOME SERVICES IN MINUTES</span>
+      </div>
     </a>
 
+    <!-- Location Selector (Urban Company / Zepto Style) -->
+    <div class="nav-location-picker" id="nav-location-btn" onclick="openLocationModal()">
+      <div class="location-icon-bubble">📍</div>
+      <div class="location-details">
+        <span class="location-label">Service Location</span>
+        <div class="location-selected">
+          <strong id="current-location-text">Indiranagar, Bengaluru</strong>
+          <span class="loc-dropdown-chevron">▾</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Wide Desktop Global Search Bar -->
+    <div class="nav-search-bar" id="nav-search-bar">
+      <span class="search-icon">🔍</span>
+      <input 
+        type="text" 
+        id="global-search-input" 
+        placeholder="Search for 'AC service', 'Plumber', 'Maid', 'Electrician'..." 
+        autocomplete="off" 
+      />
+      <span class="search-shortcut">⌘K</span>
+      <!-- Live Dropdown Results -->
+      <div class="search-dropdown" id="search-dropdown" style="display: none;">
+        <div class="search-drop-section-title">Popular Services</div>
+        <a href="{{ url_for('customer.post_job') if current_user.is_authenticated and current_user.role == 'customer' else url_for('auth.register_customer') }}" class="search-item">
+          <span class="s-icon">🔧</span>
+          <span class="s-text">Plumbing & Leak Repairs</span>
+          <span class="s-badge">Starts ₹199</span>
+        </a>
+        <a href="{{ url_for('customer.post_job') if current_user.is_authenticated and current_user.role == 'customer' else url_for('auth.register_customer') }}" class="search-item">
+          <span class="s-icon">⚡</span>
+          <span class="s-text">Electrician & Wiring</span>
+          <span class="s-badge">Starts ₹149</span>
+        </a>
+        <a href="{{ url_for('customer.post_job') if current_user.is_authenticated and current_user.role == 'customer' else url_for('auth.register_customer') }}" class="search-item">
+          <span class="s-icon">🧹</span>
+          <span class="s-text">House & Kitchen Deep Cleaning</span>
+          <span class="s-badge">Starts ₹399</span>
+        </a>
+        <a href="{{ url_for('customer.post_job') if current_user.is_authenticated and current_user.role == 'customer' else url_for('auth.register_customer') }}" class="search-item">
+          <span class="s-icon">❄️</span>
+          <span class="s-text">AC Servicing & Cooling Faults</span>
+          <span class="s-badge">Starts ₹499</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Nav Links & Profile Actions -->
     <ul class="nav-links" id="nav-links">
-      <li><a href="{{ url_for('main.index') }}" class="nav-link">Home</a></li>
+      <li><a href="{{ url_for('main.index') }}" class="nav-item-link">Home</a></li>
+      <li><a href="#services" class="nav-item-link">All Services</a></li>
+      
       {% if current_user.is_authenticated %}
         {% if current_user.role == 'customer' %}
-          <li><a href="{{ url_for('customer.dashboard') }}" class="nav-link">Dashboard</a></li>
-          <li><a href="{{ url_for('customer.post_job') }}" class="nav-link btn-nav-cta">Post a Job</a></li>
+          <li><a href="{{ url_for('customer.dashboard') }}" class="nav-item-link">My Bookings</a></li>
+          <li>
+            <a href="{{ url_for('customer.post_job') }}" class="btn-primary-compact" id="nav-post-job-cta">
+              <span>+ Post a Request</span>
+            </a>
+          </li>
         {% elif current_user.role == 'worker' %}
-          <li><a href="{{ url_for('worker.dashboard') }}" class="nav-link">Dashboard</a></li>
-          <li><a href="{{ url_for('worker.edit_profile') }}" class="nav-link">Profile</a></li>
-          <li><a href="{{ url_for('worker.manage_availability') }}" class="nav-link">Availability</a></li>
+          <li><a href="{{ url_for('worker.dashboard') }}" class="nav-item-link">Jobs Board</a></li>
+          <li><a href="{{ url_for('worker.edit_profile') }}" class="nav-item-link">Profile</a></li>
+          <li><a href="{{ url_for('worker.manage_availability') }}" class="nav-item-link">Availability</a></li>
         {% elif current_user.role == 'admin' %}
-          <li><a href="{{ url_for('admin.dashboard') }}" class="nav-link">Admin</a></li>
+          <li><a href="{{ url_for('admin.dashboard') }}" class="nav-item-link">🛡️ Admin Panel</a></li>
         {% endif %}
-        <li class="nav-user-info">
-          <span class="nav-badge nav-badge-{{ current_user.role }}">{{ current_user.role }}</span>
-          <span class="nav-name">{{ current_user.full_name.split()[0] }}</span>
+
+        <!-- User Chip -->
+        <li class="nav-user-chip">
+          <div class="user-avatar-circle">
+            {{ current_user.full_name[0] | upper }}
+          </div>
+          <div class="user-chip-meta">
+            <span class="user-chip-name">{{ current_user.full_name.split()[0] }}</span>
+            <span class="user-chip-role role-{{ current_user.role }}">{{ current_user.role }}</span>
+          </div>
         </li>
-        <li><a href="{{ url_for('auth.logout') }}" class="nav-link nav-logout">Logout</a></li>
+        <li><a href="{{ url_for('auth.logout') }}" class="nav-logout-btn" title="Logout">Logout</a></li>
+
       {% else %}
-        <li><a href="{{ url_for('auth.login') }}" class="nav-link">Login</a></li>
-        <li><a href="{{ url_for('auth.register_customer') }}" class="nav-link btn-nav-cta">Get Started</a></li>
+        <li>
+          <a href="{{ url_for('auth.register_worker') }}" class="nav-partner-link" id="nav-worker-register">
+            <span class="partner-badge">Partner</span>
+            <span>Join as Pro</span>
+          </a>
+        </li>
+        <li>
+          <a href="{{ url_for('auth.login') }}" class="nav-login-pill" id="nav-login-btn">Login</a>
+        </li>
+        <li>
+          <a href="{{ url_for('auth.register_customer') }}" class="btn-primary-compact" id="nav-register-cta">
+            <span>Book a Service</span>
+          </a>
+        </li>
       {% endif %}
     </ul>
 
-    <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+    <!-- Mobile Hamburger Toggle -->
+    <button class="hamburger-menu" id="hamburger" aria-label="Toggle navigation">
       <span></span><span></span><span></span>
     </button>
-  </nav>
+  </div>
 </header>
 
-<!-- ========== FLASH MESSAGES ========== -->
+<!-- ========== LOCATION SELECTION MODAL ========== -->
+<div class="modal-backdrop" id="location-modal" style="display: none;" onclick="closeLocationModal(event)">
+  <div class="location-modal-card" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <div class="modal-title-group">
+        <h3>Choose your city</h3>
+        <p>Serving 12,000+ pin codes across major metropolitan hubs</p>
+      </div>
+      <button class="modal-close-btn" onclick="closeLocationModal()">×</button>
+    </div>
+    
+    <div class="modal-search-city">
+      <input type="text" placeholder="Search city or pincode..." id="city-search-box" />
+    </div>
+
+    <div class="popular-cities-grid">
+      <div class="city-card active" onclick="selectCity('Indiranagar, Bengaluru')">
+        <span class="city-icon">🏙️</span>
+        <span class="city-name">Bengaluru</span>
+        <span class="city-badge">Fastest Dispatch</span>
+      </div>
+      <div class="city-card" onclick="selectCity('Andheri West, Mumbai')">
+        <span class="city-icon">🌊</span>
+        <span class="city-name">Mumbai</span>
+      </div>
+      <div class="city-card" onclick="selectCity('Connaught Place, Delhi NCR')">
+        <span class="city-icon">🏛️</span>
+        <span class="city-name">Delhi NCR</span>
+      </div>
+      <div class="city-card" onclick="selectCity('Banjara Hills, Hyderabad')">
+        <span class="city-icon">🕌</span>
+        <span class="city-name">Hyderabad</span>
+      </div>
+      <div class="city-card" onclick="selectCity('Kothrud, Pune')">
+        <span class="city-icon">🌳</span>
+        <span class="city-name">Pune</span>
+      </div>
+      <div class="city-card" onclick="selectCity('T. Nagar, Chennai')">
+        <span class="city-icon">⚓</span>
+        <span class="city-name">Chennai</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== FLASH ALERTS ========== -->
 {% with messages = get_flashed_messages(with_categories=true) %}
   {% if messages %}
   <div class="flash-container" id="flash-container">
@@ -68,37 +206,106 @@
   {% endif %}
 {% endwith %}
 
-<!-- ========== MAIN ========== -->
+<!-- ========== MAIN CONTENT ========== -->
 <main class="main-content" id="main-content">
   {% block content %}{% endblock %}
 </main>
 
-<!-- ========== FOOTER ========== -->
-<footer class="site-footer">
-  <div class="footer-inner">
-    <div class="footer-brand">
-      <span class="logo-icon">⚡</span>
-      <span class="logo-text">Serve<strong>Local</strong></span>
-      <p class="footer-tagline">Trusted local services, at your doorstep.</p>
-    </div>
-    <div class="footer-links">
-      <div class="footer-col">
-        <h4>For Customers</h4>
-        <a href="{{ url_for('auth.register_customer') }}">Register</a>
-        <a href="{{ url_for('auth.login') }}">Login</a>
-        {% if current_user.is_authenticated and current_user.role == 'customer' %}
-          <a href="{{ url_for('customer.post_job') }}">Post a Job</a>
-        {% endif %}
-      </div>
-      <div class="footer-col">
-        <h4>For Workers</h4>
-        <a href="{{ url_for('auth.register_worker') }}">Register</a>
-        <a href="{{ url_for('auth.login') }}">Login</a>
+<!-- ========== URBAN COMPANY STYLE DESKTOP FOOTER ========== -->
+<footer class="uc-footer">
+  <!-- Trust Pillar Highlights Strip -->
+  <div class="footer-trust-strip">
+    <div class="footer-container">
+      <div class="trust-pill-grid">
+        <div class="trust-item">
+          <div class="trust-icon">🛡️</div>
+          <div class="trust-meta">
+            <strong>100% Verified Professionals</strong>
+            <span>Rigorous police & background checks</span>
+          </div>
+        </div>
+        <div class="trust-item">
+          <div class="trust-icon">⚡</div>
+          <div class="trust-meta">
+            <strong>Rapid 15–30 Min Response</strong>
+            <span>Direct nearby worker matching</span>
+          </div>
+        </div>
+        <div class="trust-item">
+          <div class="trust-icon">💳</div>
+          <div class="trust-meta">
+            <strong>Transparent Fixed Pricing</strong>
+            <span>Zero hidden charges, pay after job</span>
+          </div>
+        </div>
+        <div class="trust-item">
+          <div class="trust-icon">⭐</div>
+          <div class="trust-meta">
+            <strong>30-Day Service Guarantee</strong>
+            <span>Free rework if you're not satisfied</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
+
+  <div class="footer-container footer-body">
+    <div class="footer-column brand-column">
+      <div class="footer-brand">
+        <span class="footer-logo-mark">⚡</span>
+        <span class="footer-brand-title">Serve<strong>Local</strong></span>
+      </div>
+      <p class="footer-desc">
+        India's modern hyperlocal service marketplace connecting homeowners with independent, trusted local workers for urgent repairs, installations, and daily household maintenance.
+      </p>
+      <div class="footer-socials">
+        <span class="social-circle">📱</span>
+        <span class="social-circle">💬</span>
+        <span class="social-circle">✉️</span>
+      </div>
+    </div>
+
+    <div class="footer-column">
+      <h4>Popular Services</h4>
+      <a href="#services">Plumbing & Water Tanks</a>
+      <a href="#services">Electrician & Inverter Fix</a>
+      <a href="#services">House & Kitchen Cleaning</a>
+      <a href="#services">Cooks & Meal Prep</a>
+      <a href="#services">Carpentry & Furniture Repair</a>
+      <a href="#services">AC Servicing & Gas Charging</a>
+    </div>
+
+    <div class="footer-column">
+      <h4>For Customers</h4>
+      <a href="{{ url_for('auth.register_customer') }}">Register as Customer</a>
+      <a href="{{ url_for('auth.login') }}">Customer Sign In</a>
+      {% if current_user.is_authenticated and current_user.role == 'customer' %}
+        <a href="{{ url_for('customer.post_job') }}">Post a Service Request</a>
+        <a href="{{ url_for('customer.dashboard') }}">Track Active Bookings</a>
+      {% endif %}
+      <a href="#how-it-works">How Pricing Works</a>
+      <a href="#safety">Customer Safety Charter</a>
+    </div>
+
+    <div class="footer-column">
+      <h4>For Professionals</h4>
+      <a href="{{ url_for('auth.register_worker') }}" class="highlight-link">Join as a Service Partner</a>
+      <a href="{{ url_for('auth.login') }}">Worker Partner Login</a>
+      <a href="#why-us">Zero Commission Policy</a>
+      <a href="#why-us">Flexible Hours & Work Radius</a>
+      <a href="#safety">Partner Standards</a>
+    </div>
+  </div>
+
   <div class="footer-bottom">
-    <p>&copy; 2025 ServeLocal. Prices and availability are as provided by workers. We do not guarantee specific response times.</p>
+    <div class="footer-container bottom-flex">
+      <p>&copy; 2026 ServeLocal Marketplace Technologies India Pvt Ltd. All rights reserved.</p>
+      <div class="bottom-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Safety Guidelines</a>
+      </div>
+    </div>
   </div>
 </footer>
 
