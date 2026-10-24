@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}Booking #{{ booking.id }}{% endblock %}
+
+{% block content %}
+<div class="form-page">
+  <a href="{{ url_for('worker.dashboard') }}" class="back-link">← Dashboard</a>
+  <h1>Booking #{{ booking.id }}</h1>
+
+  <!-- Status tracker -->
+  <div class="section-card">
+    <div class="booking-status-tracker">
+      {% set statuses = ['confirmed','worker_on_the_way','in_progress','completed'] %}
+      {% for s in statuses %}
+      <div class="tracker-step {% if booking.status == s %}active{% elif statuses.index(s) < statuses.index(booking.status) %}done{% endif %}">
+        <div class="tracker-dot"></div>
+        <span>{{ s.replace('_',' ').title() }}</span>
+      </div>
+      {% if not loop.last %}<div class="tracker-line"></div>{% endif %}
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Update status -->
+  {% set next_statuses = {'confirmed': 'worker_on_the_way', 'worker_on_the_way': 'in_progress', 'in_progress': 'completed'} %}
+  {% if booking.status in next_statuses %}
+  <div class="section-card">
+    <h2 class="section-card-title">Update Status</h2>
+    <form method="POST" action="{{ url_for('worker.update_booking_status', booking_id=booking.id) }}"
+          id="update-status-form-{{ booking.id }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+      <input type="hidden" name="status" value="{{ next_statuses[booking.status] }}" />
+      <button type="submit" class="btn btn-primary btn-lg" id="update-status-btn"
+              onclick="return confirm('Mark booking as {{ next_statuses[booking.status].replace(\'_\',\' \').title() }}?');">
+        Mark as "{{ next_statuses[booking.status].replace('_',' ').title() }}" →
+      </button>
+    </form>
+  </div>
+  {% endif %}
+
+  <!-- Details -->
+  <div class="detail-grid">
+    <div class="section-card">
+      <h2 class="section-card-title">📋 Job Details</h2>
+      <table class="detail-table">
+        <tr><th>Service</th><td>{{ booking.job.category.icon }} {{ booking.job.category.name }}</td></tr>
+        <tr><th>Job</th><td>{{ booking.job.title }}</td></tr>
+        <tr><th>Description</th><td>{{ booking.job.description }}</td></tr>
+        <tr><th>Location</th><td>{{ booking.job.location_text or '—' }}</td></tr>
+        <tr><th>Agreed Price</th><td><strong>₹{{ booking.agreed_price|int }}</strong></td></tr>
+        <tr><th>Booked On</th><td>{{ booking.created_at.strftime('%d %b %Y, %I:%M %p') }}</td></tr>
+        {% if booking.completed_at %}
+        <tr><th>Completed At</th><td>{{ booking.completed_at.strftime('%d %b %Y, %I:%M %p') }}</td></tr>
+        {% endif %}
+      </table>
+    </div>
+
+    <div class="section-card">
+      <h2 class="section-card-title">👤 Customer</h2>
+      <div class="worker-summary">
+        <div class="worker-summary-avatar">{{ booking.customer.full_name[0].upper() }}</div>
+        <div class="worker-summary-info">
+          <strong>{{ booking.customer.full_name }}</strong>
+          {% if booking.status in ('confirmed','worker_on_the_way','in_progress','completed') %}
+          <span>📞 {{ booking.customer.phone }}</span>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

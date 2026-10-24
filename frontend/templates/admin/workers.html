@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Admin — Workers{% endblock %}
+{% block content %}
+<div class="dashboard-page">
+  <div class="dashboard-header">
+    <h1>All Workers</h1>
+    <a href="{{ url_for('admin.dashboard') }}" class="btn btn-ghost">← Admin</a>
+  </div>
+  <div class="section-card">
+    <table class="admin-table" id="admin-workers-table">
+      <thead>
+        <tr>
+          <th>Name</th><th>Phone</th><th>City</th><th>Exp</th>
+          <th>Radius</th><th>Verification</th><th>Jobs Done</th><th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for worker in workers %}
+        <tr id="admin-worker-row-{{ worker.id }}">
+          <td>{{ worker.user.full_name }}</td>
+          <td>{{ worker.user.phone }}</td>
+          <td>{{ worker.city or '—' }}</td>
+          <td>{{ worker.experience_years }} yr</td>
+          <td>{{ worker.service_radius_km }} km</td>
+          <td><span class="ver-badge ver-{{ worker.verification_status }}">{{ worker.verification_status.title() }}</span></td>
+          <td>{{ worker.total_bookings }}</td>
+          <td>
+            <form method="POST" action="{{ url_for('admin.verify_worker', worker_id=worker.id) }}"
+                  class="inline-form" id="admin-verify-form-{{ worker.id }}">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+              {% if worker.verification_status != 'verified' %}
+              <input type="hidden" name="status" value="verified" />
+              <button type="submit" class="btn btn-primary btn-sm" id="admin-verify-btn-{{ worker.id }}">Verify</button>
+              {% else %}
+              <input type="hidden" name="status" value="unverified" />
+              <button type="submit" class="btn btn-ghost btn-sm" id="admin-unverify-btn-{{ worker.id }}">Unverify</button>
+              {% endif %}
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

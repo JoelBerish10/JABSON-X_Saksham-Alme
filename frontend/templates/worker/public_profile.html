@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% block title %}{{ worker.user.full_name }} — Worker Profile{% endblock %}
+
+{% block content %}
+<div class="form-page">
+  <div class="worker-public-card">
+    <div class="worker-public-hero">
+      <div class="worker-public-avatar">{{ worker.user.full_name[0].upper() }}</div>
+      <div class="worker-public-info">
+        <h1>{{ worker.user.full_name }}</h1>
+        <p class="worker-public-city">📍 {{ worker.city or 'Location not specified' }}</p>
+        <div class="worker-public-badges">
+          <span class="ver-badge ver-{{ worker.verification_status }}">{{ worker.verification_status.replace('_',' ').title() }}</span>
+          {% if worker.average_rating %}
+          <span class="rating-pill">⭐ {{ worker.average_rating }} / 5</span>
+          {% endif %}
+          <span class="exp-pill">{{ worker.experience_years }} yr exp</span>
+          <span class="jobs-pill">{{ worker.total_bookings }} jobs done</span>
+        </div>
+      </div>
+    </div>
+
+    {% if worker.bio %}
+    <div class="worker-bio">
+      <h3>About</h3>
+      <p>{{ worker.bio }}</p>
+    </div>
+    {% endif %}
+
+    <div class="worker-skills-section">
+      <h3>Services Offered</h3>
+      <div class="skills-tags">
+        {% for skill in worker.skills %}
+        <div class="skill-tag">
+          <span class="skill-tag-icon">{{ skill.category.icon }}</span>
+          <span>{{ skill.category.name }}</span>
+          {% if skill.rate_description %}
+          <span class="skill-rate">{{ skill.rate_description }}</span>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="worker-avail-section">
+      <h3>Availability</h3>
+      <div class="avail-pills">
+        {% for avail in worker.availability if avail.is_available %}
+        <span class="avail-pill">{{ avail.day_of_week[:3] }} {{ avail.start_time.strftime('%I%p') }}–{{ avail.end_time.strftime('%I%p') }}</span>
+        {% else %}
+        <span class="empty-note">Availability not set.</span>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="worker-radius">
+      <span>📡 Service radius: {{ worker.service_radius_km }} km</span>
+    </div>
+  </div>
+
+  <!-- Reviews -->
+  <section class="section-card">
+    <h2 class="section-card-title">⭐ Reviews ({{ reviews|length }})</h2>
+    {% if reviews %}
+    <div class="reviews-list">
+      {% for review in reviews %}
+      <div class="review-card" id="review-card-{{ review.id }}">
+        <div class="review-header">
+          <div class="review-avatar">{{ review.reviewer.full_name[0].upper() }}</div>
+          <div class="review-meta">
+            <strong>{{ review.reviewer.full_name }}</strong>
+            <span class="review-date">{{ review.created_at.strftime('%d %b %Y') }}</span>
+          </div>
+          <div class="review-stars">
+            {% for i in range(1,6) %}
+            <span class="star {% if i <= review.rating %}star-filled{% endif %}">★</span>
+            {% endfor %}
+          </div>
+        </div>
+        {% if review.comment %}
+        <p class="review-comment">"{{ review.comment }}"</p>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+      <p>No reviews yet — this worker hasn't completed any bookings on the platform.</p>
+    </div>
+    {% endif %}
+  </section>
+
+  {% if current_user.is_authenticated and current_user.role == 'customer' %}
+  <div class="text-center" style="margin-top: 2rem;">
+    <a href="{{ url_for('customer.post_job') }}" class="btn btn-primary btn-lg" id="hire-this-worker-btn">
+      Post a Job to Hire
+    </a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

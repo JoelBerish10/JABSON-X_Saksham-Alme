@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Admin — Jobs{% endblock %}
+{% block content %}
+<div class="dashboard-page">
+  <div class="dashboard-header">
+    <h1>All Jobs</h1>
+    <a href="{{ url_for('admin.dashboard') }}" class="btn btn-ghost">← Admin</a>
+  </div>
+  <div class="section-card">
+    <table class="admin-table" id="admin-jobs-table">
+      <thead>
+        <tr><th>#</th><th>Title</th><th>Category</th><th>Location</th><th>Urgency</th><th>Status</th><th>Posted</th></tr>
+      </thead>
+      <tbody>
+        {% for job in jobs %}
+        <tr id="admin-job-row-{{ job.id }}">
+          <td>{{ job.id }}</td>
+          <td>{{ job.title }}</td>
+          <td>{{ job.category.icon }} {{ job.category.name }}</td>
+          <td>{{ job.location_text or '—' }}</td>
+          <td><span class="urgency-tag urgency-{{ job.urgency }}">{{ job.urgency.title() }}</span></td>
+          <td><span class="status-badge status-{{ job.status }}">{{ job.status.replace('_',' ').title() }}</span></td>
+          <td>{{ job.created_at.strftime('%d %b %Y') }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block title %}Booking #{{ booking.id }}{% endblock %}
+
+{% block content %}
+<div class="form-page">
+  <a href="{{ url_for('customer.dashboard') }}" class="back-link">← Dashboard</a>
+  <h1>Booking #{{ booking.id }}</h1>
+
+  <!-- Status tracker -->
+  <div class="section-card">
+    <div class="booking-status-tracker">
+      {% set statuses = ['confirmed','worker_on_the_way','in_progress','completed'] %}
+      {% for s in statuses %}
+      <div class="tracker-step {% if booking.status == s %}active{% elif statuses.index(s) < statuses.index(booking.status) %}done{% endif %}">
+        <div class="tracker-dot"></div>
+        <span>{{ s.replace('_',' ').title() }}</span>
+      </div>
+      {% if not loop.last %}<div class="tracker-line"></div>{% endif %}
+      {% endfor %}
+    </div>
+    {% if booking.status == 'cancelled' %}
+    <p class="status-badge status-cancelled status-lg" style="margin-top:1rem;">Booking Cancelled</p>
+    {% endif %}
+  </div>
+
+  <!-- Booking details -->
+  <div class="detail-grid">
+    <div class="section-card">
+      <h2 class="section-card-title">📋 Job Details</h2>
+      <table class="detail-table">
+        <tr><th>Service</th><td>{{ booking.job.category.icon }} {{ booking.job.category.name }}</td></tr>
+        <tr><th>Job</th><td>{{ booking.job.title }}</td></tr>
+        <tr><th>Description</th><td>{{ booking.job.description }}</td></tr>
+        <tr><th>Location</th><td>{{ booking.job.location_text or '—' }}</td></tr>
+        <tr><th>Agreed Price</th><td><strong>₹{{ booking.agreed_price|int }}</strong></td></tr>
+        {% if booking.scheduled_at %}
+        <tr><th>Scheduled At</th><td>{{ booking.scheduled_at.strftime('%d %b %Y, %I:%M %p') }}</td></tr>
+        {% endif %}
+        <tr><th>Booked On</th><td>{{ booking.created_at.strftime('%d %b %Y, %I:%M %p') }}</td></tr>
+        {% if booking.completed_at %}
+        <tr><th>Completed At</th><td>{{ booking.completed_at.strftime('%d %b %Y, %I:%M %p') }}</td></tr>
+        {% endif %}
+      </table>
+    </div>
+
+    <div class="section-card">
+      <h2 class="section-card-title">👷 Worker</h2>
+      <div class="worker-summary">
+        <div class="worker-summary-avatar">{{ booking.worker.user.full_name[0].upper() }}</div>
+        <div class="worker-summary-info">
+          <strong>{{ booking.worker.user.full_name }}</strong>
+          <span>{{ booking.worker.city or '—' }}</span>
+          <span>{{ booking.worker.experience_years }} yr exp</span>
+          {% if booking.worker.average_rating %}
+          <span>⭐ {{ booking.worker.average_rating }}</span>
+          {% endif %}
+          <span class="ver-badge ver-{{ booking.worker.verification_status }}">{{ booking.worker.verification_status.title() }}</span>
+        </div>
+      </div>
+      <a href="{{ url_for('worker.public_profile', worker_id=booking.worker.id) }}" class="btn btn-ghost btn-sm" id="view-worker-profile-btn">
+        View Profile
+      </a>
+    </div>
+  </div>
+
+  <!-- Review section -->
+  {% if booking.status == 'completed' %}
+  <div class="section-card">
+    <h2 class="section-card-title">⭐ Review</h2>
+    {% if booking.review %}
+    <div class="review-display">
+      <div class="star-display">
+        {% for i in range(1,6) %}
+        <span class="star {% if i <= booking.review.rating %}star-filled{% endif %}">★</span>
+        {% endfor %}
+        <span class="review-rating-num">{{ booking.review.rating }}/5</span>
+      </div>
+      {% if booking.review.comment %}
+      <p class="review-comment">"{{ booking.review.comment }}"</p>
+      {% endif %}
+      <p class="review-date">Submitted {{ booking.review.created_at.strftime('%d %b %Y') }}</p>
+    </div>
+    {% else %}
+    <p>You haven't reviewed this booking yet.</p>
+    <a href="{{ url_for('customer.submit_review', booking_id=booking.id) }}" class="btn btn-primary" id="submit-review-btn">
+      Write a Review →
+    </a>
+    {% endif %}
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

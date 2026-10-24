@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Leave a Review{% endblock %}
+
+{% block content %}
+<div class="form-page">
+  <a href="{{ url_for('customer.booking_detail', booking_id=booking.id) }}" class="back-link">← Booking</a>
+  <div class="form-card">
+    <div class="auth-header">
+      <div class="auth-logo">⭐</div>
+      <h1>Rate Your Experience</h1>
+      <p>Review your booking with {{ booking.worker.user.full_name }}</p>
+    </div>
+
+    <form method="POST" action="{{ url_for('customer.submit_review', booking_id=booking.id) }}" class="auth-form" id="review-form">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
+      <div class="form-group">
+        <label>Rating <span class="req">*</span></label>
+        <div class="star-rating" id="star-rating">
+          {% for i in range(1,6) %}
+          <input type="radio" id="star{{ i }}" name="rating" value="{{ i }}" required />
+          <label for="star{{ i }}" aria-label="{{ i }} star">★</label>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="comment">Your Comment <span class="optional">(optional)</span></label>
+        <textarea id="comment" name="comment" rows="4"
+                  placeholder="Describe your experience — quality of work, punctuality, communication…"></textarea>
+      </div>
+
+      <div class="info-box">
+        <span>🔒</span>
+        <p>Reviews are linked to your completed booking and help other customers make informed decisions.</p>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-full btn-lg" id="submit-review-submit">Submit Review →</button>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<style>
+.star-rating { display: flex; flex-direction: row-reverse; gap: 4px; font-size: 2.5rem; }
+.star-rating input { display: none; }
+.star-rating label { cursor: pointer; color: #ddd; transition: color .15s; }
+.star-rating input:checked ~ label,
+.star-rating label:hover,
+.star-rating label:hover ~ label { color: #f59e0b; }
+</style>
+{% endblock %}

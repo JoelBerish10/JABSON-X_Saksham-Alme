@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Admin — Users{% endblock %}
+{% block content %}
+<div class="dashboard-page">
+  <div class="dashboard-header">
+    <h1>All Users</h1>
+    <a href="{{ url_for('admin.dashboard') }}" class="btn btn-ghost">← Admin</a>
+  </div>
+  <div class="section-card">
+    <table class="admin-table" id="admin-users-table">
+      <thead>
+        <tr><th>Name</th><th>Phone</th><th>Email</th><th>Role</th><th>Joined</th><th>Active</th><th>Action</th></tr>
+      </thead>
+      <tbody>
+        {% for user in users %}
+        <tr id="admin-user-row-{{ user.id }}">
+          <td>{{ user.full_name }}</td>
+          <td>{{ user.phone }}</td>
+          <td>{{ user.email or '—' }}</td>
+          <td><span class="nav-badge nav-badge-{{ user.role }}">{{ user.role }}</span></td>
+          <td>{{ user.created_at.strftime('%d %b %Y') }}</td>
+          <td>{{ '✓' if user.is_active else '✗' }}</td>
+          <td>
+            <form method="POST" action="{{ url_for('admin.toggle_user_active', user_id=user.id) }}"
+                  class="inline-form" id="toggle-user-form-{{ user.id }}">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+              <button type="submit" class="btn btn-sm {% if user.is_active %}btn-danger-outline{% else %}btn-primary{% endif %}"
+                      id="toggle-user-btn-{{ user.id }}">
+                {{ 'Deactivate' if user.is_active else 'Activate' }}
+              </button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

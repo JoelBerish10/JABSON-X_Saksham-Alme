@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="dashboard-page">
+  <div class="dashboard-header">
+    <h1>🛡️ Admin Panel</h1>
+    <div class="dashboard-header-actions">
+      <a href="{{ url_for('admin.workers') }}" class="btn btn-outline">Workers</a>
+      <a href="{{ url_for('admin.jobs') }}" class="btn btn-outline">Jobs</a>
+      <a href="{{ url_for('admin.users') }}" class="btn btn-outline">Users</a>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <span class="stat-card-num">{{ stats.users }}</span>
+      <span class="stat-card-label">Total Users</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-card-num">{{ stats.workers }}</span>
+      <span class="stat-card-label">Workers</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-card-num">{{ stats.jobs }}</span>
+      <span class="stat-card-label">Jobs</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-card-num">{{ stats.bookings }}</span>
+      <span class="stat-card-label">Bookings</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-card-num">{{ stats.completed }}</span>
+      <span class="stat-card-label">Completed</span>
+    </div>
+  </div>
+
+  <!-- Pending verification -->
+  <section class="section-card">
+    <h2 class="section-card-title">⏳ Workers Pending Verification ({{ pending_workers|length }})</h2>
+    {% if pending_workers %}
+    <div class="job-list">
+      {% for worker in pending_workers %}
+      <div class="job-list-item" id="pending-worker-{{ worker.id }}">
+        <div class="job-list-body">
+          <span class="job-list-title">{{ worker.user.full_name }}</span>
+          <span class="job-list-meta">{{ worker.city or '—' }} · {{ worker.experience_years }} yr exp</span>
+        </div>
+        <div class="job-list-right">
+          <form method="POST" action="{{ url_for('admin.verify_worker', worker_id=worker.id) }}" class="inline-form" id="verify-form-{{ worker.id }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+            <input type="hidden" name="status" value="verified" />
+            <button type="submit" class="btn btn-primary btn-sm" id="verify-worker-btn-{{ worker.id }}">Verify</button>
+          </form>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p class="empty-note">No workers pending verification.</p>
+    {% endif %}
+  </section>
+
+  <!-- Recent jobs -->
+  <section class="section-card">
+    <h2 class="section-card-title">📋 Recent Jobs</h2>
+    <div class="job-list">
+      {% for job in recent_jobs %}
+      <div class="job-list-item" id="admin-job-{{ job.id }}">
+        <div class="job-list-icon">{{ job.category.icon }}</div>
+        <div class="job-list-body">
+          <span class="job-list-title">{{ job.title }}</span>
+          <span class="job-list-meta">{{ job.category.name }} · {{ job.location_text or '—' }}</span>
+          <span class="job-list-time">{{ job.created_at.strftime('%d %b %Y, %I:%M %p') }}</span>
+        </div>
+        <div class="job-list-right">
+          <span class="status-badge status-{{ job.status }}">{{ job.status.replace('_',' ').title() }}</span>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+</div>
+{% endblock %}

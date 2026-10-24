@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Manage Availability{% endblock %}
+
+{% block content %}
+<div class="form-page">
+  <a href="{{ url_for('worker.dashboard') }}" class="back-link">← Dashboard</a>
+  <div class="form-card">
+    <div class="auth-header">
+      <div class="auth-logo">🗓️</div>
+      <h1>Set Availability</h1>
+      <p>Choose the days and hours you are available for jobs.</p>
+    </div>
+
+    <form method="POST" action="{{ url_for('worker.manage_availability') }}" class="auth-form" id="availability-form">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
+      <div class="availability-grid" id="availability-grid">
+        {% for day in days %}
+        {% set avail = avail_map.get(day) %}
+        <div class="avail-row" id="avail-row-{{ day }}">
+          <label class="avail-day-toggle">
+            <input type="checkbox" name="avail_{{ day }}" id="avail_cb_{{ day }}"
+                   {% if avail and avail.is_available %}checked{% endif %}
+                   onchange="toggleDay('{{ day }}')" />
+            <span class="avail-day-label">{{ day }}</span>
+          </label>
+          <div class="avail-times {% if not avail or not avail.is_available %}avail-times-hidden{% endif %}"
+               id="avail-times-{{ day }}">
+            <div class="input-wrapper">
+              <span class="input-icon">⏰</span>
+              <input type="time" name="start_{{ day }}" id="start_{{ day }}"
+                     value="{{ avail.start_time.strftime('%H:%M') if avail else '09:00' }}" />
+            </div>
+            <span class="avail-to">to</span>
+            <div class="input-wrapper">
+              <span class="input-icon">⏰</span>
+              <input type="time" name="end_{{ day }}" id="end_{{ day }}"
+                     value="{{ avail.end_time.strftime('%H:%M') if avail else '18:00' }}" />
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-full btn-lg" id="save-availability-btn">Save Availability</button>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+function toggleDay(day) {
+  var cb = document.getElementById('avail_cb_' + day);
+  var times = document.getElementById('avail-times-' + day);
+  times.classList.toggle('avail-times-hidden', !cb.checked);
+}
+</script>
+{% endblock %}

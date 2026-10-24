@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}Edit Profile{% endblock %}
+
+{% block content %}
+<div class="form-page">
+  <a href="{{ url_for('worker.dashboard') }}" class="back-link">← Dashboard</a>
+  <div class="form-card">
+    <div class="auth-header">
+      <div class="auth-logo">🔧</div>
+      <h1>Edit Worker Profile</h1>
+    </div>
+
+    <form method="POST" action="{{ url_for('worker.edit_profile') }}" class="auth-form" id="edit-profile-form">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
+      <div class="form-group">
+        <label for="bio">Bio / About You</label>
+        <textarea id="bio" name="bio" rows="4" placeholder="Describe your skills and experience…">{{ worker.bio or '' }}</textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="experience_years">Years of Experience</label>
+          <div class="input-wrapper">
+            <span class="input-icon">📅</span>
+            <input type="number" id="experience_years" name="experience_years" min="0" max="50" value="{{ worker.experience_years }}" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="service_radius_km">Service Radius (km)</label>
+          <div class="input-wrapper">
+            <span class="input-icon">📍</span>
+            <input type="number" id="service_radius_km" name="service_radius_km" min="1" max="100" step="0.5" value="{{ worker.service_radius_km }}" />
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="city">City</label>
+        <div class="input-wrapper">
+          <span class="input-icon">🏙️</span>
+          <input type="text" id="city" name="city" placeholder="e.g. Bengaluru" value="{{ worker.city or '' }}" />
+        </div>
+      </div>
+
+      <div class="form-section-title">Service Categories &amp; Rates</div>
+      <div class="category-checkboxes" id="edit-category-checkboxes">
+        {% for cat in categories %}
+        <label class="checkbox-card" for="ecat_{{ cat.id }}">
+          <input type="checkbox" id="ecat_{{ cat.id }}" name="categories" value="{{ cat.id }}"
+                 {% if cat.id in my_cat_ids %}checked{% endif %} />
+          <span class="cb-icon">{{ cat.icon }}</span>
+          <span class="cb-label">{{ cat.name }}</span>
+        </label>
+        {% endfor %}
+      </div>
+
+      <div class="form-group">
+        <label>Rate / Pricing Description (per category)</label>
+        {% for cat in categories %}
+        {% set skill = worker.skills | selectattr('category_id','equalto',cat.id) | first %}
+        <div class="rate-input-row {% if cat.id not in my_cat_ids %}hidden{% endif %}" id="rate-row-{{ cat.id }}">
+          <span class="rate-cat-label">{{ cat.icon }} {{ cat.name }}</span>
+          <input type="text" name="rate_{{ cat.id }}" class="rate-input"
+                 placeholder="e.g. ₹300 per visit"
+                 value="{{ skill.rate_description if skill else '' }}" />
+        </div>
+        {% endfor %}
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-full btn-lg" id="edit-profile-submit">Save Profile</button>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+// Show/hide rate inputs based on checked categories
+document.querySelectorAll('[name="categories"]').forEach(function(cb) {
+  cb.addEventListener('change', function() {
+    var row = document.getElementById('rate-row-' + this.value);
+    if (row) row.classList.toggle('hidden', !this.checked);
+  });
+});
+</script>
+{% endblock %}

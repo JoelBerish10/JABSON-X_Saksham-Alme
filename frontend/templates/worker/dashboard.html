@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% block title %}Worker Dashboard{% endblock %}
+
+{% block content %}
+<div class="dashboard-page">
+  <div class="dashboard-header">
+    <div>
+      <h1>Hello, {{ current_user.full_name.split()[0] }} 👋</h1>
+      <p class="dashboard-subtitle">
+        <span class="ver-badge ver-{{ worker.verification_status }}">{{ worker.verification_status.replace('_',' ').title() }}</span>
+        {{ worker.city or '' }}
+        {% if worker.average_rating %}· ⭐ {{ worker.average_rating }}{% endif %}
+        · {{ worker.total_bookings }} jobs done
+      </p>
+    </div>
+    <div class="dashboard-header-actions">
+      <a href="{{ url_for('worker.edit_profile') }}" class="btn btn-ghost">Edit Profile</a>
+      <a href="{{ url_for('worker.manage_availability') }}" class="btn btn-outline">Availability</a>
+    </div>
+  </div>
+
+  <!-- Quick stats -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <span class="stat-card-num">{{ available_jobs|length }}</span>
+      <span class="stat-card-label">Jobs Available</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-card-num">{{ my_offers|selectattr('status','equalto','pending')|list|length }}</span>
+      <span class="stat-card-label">Pending Offers</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-card-num">{{ my_bookings|selectattr('status','equalto','confirmed')|list|length }}</span>
+      <span class="stat-card-label">Active Bookings</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-card-num">{{ worker.total_bookings }}</span>
+      <span class="stat-card-label">Completed</span>
+    </div>
+  </div>
+
+  <!-- Available Jobs -->
+  <section class="section-card">
+    <h2 class="section-card-title">📋 Available Job Requests for You</h2>
+    {% if available_jobs %}
+    <div class="job-list">
+      {% for job in available_jobs %}
+      <a href="{{ url_for('worker.view_job', job_id=job.id) }}" class="job-list-item" id="avail-job-{{ job.id }}">
+        <div class="job-list-icon">{{ job.category.icon }}</div>
+        <div class="job-list-body">
+          <span class="job-list-title">{{ job.title }}</span>
+          <span class="job-list-meta">{{ job.category.name }} · {{ job.location_text or 'No location' }}</span>
+          {% if job.budget_max %}<span class="job-list-budget">Budget up to ₹{{ job.budget_max|int }}</span>{% endif %}
+          <span class="job-list-time">{{ job.created_at.strftime('%d %b, %I:%M %p') }}</span>
+        </div>
+        <div class="job-list-right">
+          <span class="urgency-tag urgency-{{ job.urgency }}">{{ job.urgency.title() }}</span>
+          <span class="btn btn-primary btn-sm">Make Offer</span>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+      <div class="empty-icon">🔍</div>
+      <p>No matching job requests right now.</p>
+      <p class="empty-hint">Make sure your profile has the right service categories and your availability is set.</p>
+    </div>
+    {% endif %}
+  </section>
+
+  <!-- My Offers -->
+  <section class="section-card">
+    <h2 class="section-card-title">💬 My Offers</h2>
+    {% if my_offers %}
+    <div class="job-list">
+      {% for offer in my_offers %}
+      <div class="job-list-item" id="my-offer-{{ offer.id }}">
+        <div class="job-list-icon">{{ offer.job.category.icon }}</div>
+        <div class="job-list-body">
+          <span class="job-list-title">{{ offer.job.title }}</span>
+          <span class="job-list-meta">Quoted: ₹{{ offer.quoted_price|int }}</span>
+          <span class="job-list-time">{{ offer.created_at.strftime('%d %b, %I:%M %p') }}</span>
+        </div>
+        <div class="job-list-right">
+          <span class="offer-status-tag offer-status-{{ offer.status }}">{{ offer.status.title() }}</span>
+          {% if offer.status == 'accepted' %}
+          <a href="{{ url_for('worker.booking_detail', booking_id=offer.job.booking.id) }}" class="btn btn-primary btn-sm" id="view-booking-from-offer-{{ offer.id }}">View Booking</a>
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p class="empty-note">You haven't submitted any offers yet.</p>
+    {% endif %}
+  </section>
+
+  <!-- Active Bookings -->
+  <section class="section-card">
+    <h2 class="section-card-title">📦 My Bookings</h2>
+    {% if my_bookings %}
+    <div class="job-list">
+      {% for booking in my_bookings %}
+      <a href="{{ url_for('worker.booking_detail', booking_id=booking.id) }}" class="job-list-item" id="my-booking-{{ booking.id }}">
+        <div class="job-list-icon">{{ booking.job.category.icon }}</div>
+        <div class="job-list-body">
+          <span class="job-list-title">{{ booking.job.title }}</span>
+          <span class="job-list-meta">₹{{ booking.agreed_price|int }} · {{ booking.job.location_text or '—' }}</span>
+          <span class="job-list-time">{{ booking.created_at.strftime('%d %b %Y') }}</span>
+        </div>
+        <div class="job-list-right">
+          <span class="status-badge status-{{ booking.status }}">{{ booking.status.replace('_',' ').title() }}</span>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p class="empty-note">No bookings yet.</p>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

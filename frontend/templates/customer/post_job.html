@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+{% block title %}Post a Job{% endblock %}
+
+{% block content %}
+<div class="form-page">
+  <div class="form-page-header">
+    <a href="{{ url_for('customer.dashboard') }}" class="back-link">← Dashboard</a>
+    <h1>Post a Service Request</h1>
+    <p>Describe what you need — skilled workers will send you offers.</p>
+  </div>
+
+  <div class="form-card">
+    <form method="POST" action="{{ url_for('customer.post_job') }}" enctype="multipart/form-data"
+          class="main-form" id="post-job-form">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
+      <div class="form-section-title">What do you need?</div>
+
+      <div class="form-group">
+        <label for="category_id">Service Category <span class="req">*</span></label>
+        <div class="category-selector" id="category-selector">
+          {% for cat in categories %}
+          <label class="cat-radio" for="cat_radio_{{ cat.id }}">
+            <input type="radio" id="cat_radio_{{ cat.id }}" name="category_id" value="{{ cat.id }}"
+                   {% if form_data.get('category_id')|string == cat.id|string %}checked{% endif %}
+                   required />
+            <span class="cat-radio-icon">{{ cat.icon }}</span>
+            <span class="cat-radio-label">{{ cat.name }}</span>
+          </label>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="title">Job Title <span class="req">*</span></label>
+        <div class="input-wrapper">
+          <span class="input-icon">📝</span>
+          <input type="text" id="title" name="title" required
+                 placeholder="e.g. Fix leaking kitchen tap"
+                 value="{{ form_data.get('title', '') }}" maxlength="200" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="description">Describe the Work <span class="req">*</span></label>
+        <textarea id="description" name="description" rows="4" required
+                  placeholder="Explain the problem in detail — this helps workers give accurate quotes.">{{ form_data.get('description', '') }}</textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="photo">Attach a Photo <span class="optional">(optional)</span></label>
+        <div class="file-upload-area" id="photo-upload-area">
+          <input type="file" id="photo" name="photo" accept="image/*" class="file-input" />
+          <div class="file-upload-ui">
+            <span class="file-icon">📷</span>
+            <span class="file-text">Click or drag to upload a photo</span>
+            <span class="file-hint">JPG, PNG, WebP — max 5 MB</span>
+          </div>
+          <img id="photo-preview" src="" alt="" style="display:none;" />
+        </div>
+      </div>
+
+      <div class="form-section-title">Location &amp; Timing</div>
+
+      <div class="form-group">
+        <label for="location_text">Service Location <span class="req">*</span></label>
+        <div class="input-wrapper">
+          <span class="input-icon">📍</span>
+          <input type="text" id="location_text" name="location_text" required
+                 placeholder="e.g. 12, MG Road, Bengaluru"
+                 value="{{ form_data.get('location_text', '') }}" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="urgency">Urgency</label>
+          <div class="input-wrapper">
+            <span class="input-icon">⏱️</span>
+            <select id="urgency" name="urgency">
+              <option value="urgent" {% if form_data.get('urgency','urgent') == 'urgent' %}selected{% endif %}>Urgent — ASAP</option>
+              <option value="scheduled" {% if form_data.get('urgency') == 'scheduled' %}selected{% endif %}>Scheduled</option>
+              <option value="recurring" {% if form_data.get('urgency') == 'recurring' %}selected{% endif %}>Recurring</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group" id="preferred-time-group">
+          <label for="preferred_time">Preferred Date &amp; Time <span class="optional">(optional)</span></label>
+          <div class="input-wrapper">
+            <span class="input-icon">🗓️</span>
+            <input type="datetime-local" id="preferred_time" name="preferred_time"
+                   value="{{ form_data.get('preferred_time', '') }}" />
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section-title">Budget</div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="budget_min">Minimum Budget (₹) <span class="optional">(optional)</span></label>
+          <div class="input-wrapper">
+            <span class="input-icon">₹</span>
+            <input type="number" id="budget_min" name="budget_min" min="0" step="50"
+                   placeholder="e.g. 200" value="{{ form_data.get('budget_min', '') }}" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="budget_max">Maximum Budget (₹) <span class="optional">(optional)</span></label>
+          <div class="input-wrapper">
+            <span class="input-icon">₹</span>
+            <input type="number" id="budget_max" name="budget_max" min="0" step="50"
+                   placeholder="e.g. 800" value="{{ form_data.get('budget_max', '') }}" />
+          </div>
+        </div>
+      </div>
+
+      <div class="info-box">
+        <span>💡</span>
+        <p>Your exact address will only be shared with a worker after you confirm a booking.</p>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-full btn-lg" id="post-job-submit">
+        Post Request →
+      </button>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+// Photo preview
+document.getElementById('photo').addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(ev) {
+    const preview = document.getElementById('photo-preview');
+    preview.src = ev.target.result;
+    preview.style.display = 'block';
+    document.querySelector('.file-upload-ui').style.display = 'none';
+  };
+  reader.readAsDataURL(file);
+});
+// Show/hide preferred time based on urgency
+const urgencySelect = document.getElementById('urgency');
+const prefTimeGroup = document.getElementById('preferred-time-group');
+function updatePreferredTimeVisibility() {
+  prefTimeGroup.style.display = urgencySelect.value === 'urgent' ? 'none' : 'flex';
+}
+urgencySelect.addEventListener('change', updatePreferredTimeVisibility);
+updatePreferredTimeVisibility();
+</script>
+{% endblock %}

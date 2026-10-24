@@ -1,0 +1,214 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block meta_description %}ServeLocal — Post a job and get offers from trusted local plumbers, electricians, maids, cooks, and more. Compare prices and book instantly.{% endblock %}
+
+{% block content %}
+
+<!-- ===== HERO ===== -->
+<section class="hero" id="hero">
+  <div class="hero-bg-shapes">
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
+  </div>
+  <div class="hero-content">
+    <div class="hero-badge">🇮🇳 Made for India</div>
+    <h1 class="hero-title">
+      Find Trusted Local<br />
+      <span class="gradient-text">Service Workers</span><br />
+      Near You
+    </h1>
+    <p class="hero-subtitle">
+      Post one request — compare offers from skilled, available workers in your area.
+      No middlemen. Transparent pricing. Real reviews.
+    </p>
+
+    <div class="hero-cta-group">
+      {% if current_user.is_authenticated %}
+        {% if current_user.role == 'customer' %}
+          <a href="{{ url_for('customer.post_job') }}" class="btn btn-primary btn-lg">Post a Job →</a>
+          <a href="{{ url_for('customer.dashboard') }}" class="btn btn-ghost btn-lg">My Dashboard</a>
+        {% elif current_user.role == 'worker' %}
+          <a href="{{ url_for('worker.dashboard') }}" class="btn btn-primary btn-lg">My Dashboard →</a>
+        {% endif %}
+      {% else %}
+        <a href="{{ url_for('auth.register_customer') }}" class="btn btn-primary btn-lg" id="hero-customer-btn">
+          <span>I Need a Service</span>
+          <span class="btn-icon">👤</span>
+        </a>
+        <a href="{{ url_for('auth.register_worker') }}" class="btn btn-outline btn-lg" id="hero-worker-btn">
+          <span>I Provide Services</span>
+          <span class="btn-icon">🔧</span>
+        </a>
+      {% endif %}
+    </div>
+
+    <div class="hero-stats">
+      <div class="stat">
+        <span class="stat-num">{{ worker_count if worker_count > 0 else '100+' }}</span>
+        <span class="stat-label">Verified Workers</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat">
+        <span class="stat-num">{{ booking_count if booking_count > 0 else '500+' }}</span>
+        <span class="stat-label">Jobs Completed</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat">
+        <span class="stat-num">{{ review_count if review_count > 0 else '4.8★' }}</span>
+        <span class="stat-label">Happy Customers</span>
+      </div>
+    </div>
+    {% if worker_count == 0 and booking_count == 0 %}
+      <p class="demo-note">⚠ Stats shown are illustrative. Run the seed script to see live data.</p>
+    {% endif %}
+  </div>
+
+  <div class="hero-image">
+    <div class="hero-card-stack">
+      <div class="hero-card hero-card-1">
+        <div class="hc-avatar">🔧</div>
+        <div class="hc-info">
+          <strong>Ramesh K.</strong>
+          <span>Plumber · 5 yrs exp</span>
+          <span class="hc-rating">⭐ 4.8</span>
+        </div>
+        <span class="hc-badge available">Available</span>
+      </div>
+      <div class="hero-card hero-card-2">
+        <div class="hc-avatar">⚡</div>
+        <div class="hc-info">
+          <strong>Sanjay M.</strong>
+          <span>Electrician · 8 yrs</span>
+          <span class="hc-rating">⭐ 4.9</span>
+        </div>
+        <span class="hc-badge available">Available</span>
+      </div>
+      <div class="hero-card hero-card-3">
+        <span class="hc-offer-label">Latest Offer</span>
+        <strong class="hc-price">₹450</strong>
+        <span>ETA: ~25 min (est.)</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== HOW IT WORKS ===== -->
+<section class="how-it-works" id="how-it-works">
+  <div class="section-header">
+    <span class="section-pill">Simple Process</span>
+    <h2>How ServeLocal Works</h2>
+    <p>From request to completion in a few easy steps.</p>
+  </div>
+  <div class="steps-grid">
+    <div class="step-card">
+      <div class="step-num">1</div>
+      <div class="step-icon">📝</div>
+      <h3>Post Your Request</h3>
+      <p>Describe the work, upload a photo, set your budget, and choose urgent or scheduled.</p>
+    </div>
+    <div class="step-arrow">→</div>
+    <div class="step-card">
+      <div class="step-num">2</div>
+      <div class="step-icon">🎯</div>
+      <h3>Get Matched Offers</h3>
+      <p>Available workers nearby see your request and send price quotes with their ETA.</p>
+    </div>
+    <div class="step-arrow">→</div>
+    <div class="step-card">
+      <div class="step-num">3</div>
+      <div class="step-icon">✅</div>
+      <h3>Compare & Confirm</h3>
+      <p>Compare offers, check ratings and experience, then confirm the one that fits.</p>
+    </div>
+    <div class="step-arrow">→</div>
+    <div class="step-card">
+      <div class="step-num">4</div>
+      <div class="step-icon">⭐</div>
+      <h3>Done &amp; Review</h3>
+      <p>Track the job, mark it complete, and leave a verified review to help others.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CATEGORIES ===== -->
+<section class="categories-section" id="services">
+  <div class="section-header">
+    <span class="section-pill">Services</span>
+    <h2>What do you need help with?</h2>
+    <p>Choose a category and post a job — workers in your area will respond.</p>
+  </div>
+  <div class="categories-grid">
+    {% for cat in categories %}
+    <a href="{{ url_for('auth.register_customer') if not current_user.is_authenticated else url_for('customer.post_job') }}" class="cat-card" data-cat="{{ cat.name }}">
+      <span class="cat-icon">{{ cat.icon }}</span>
+      <span class="cat-name">{{ cat.name }}</span>
+      <span class="cat-arrow">→</span>
+    </a>
+    {% else %}
+    <p class="empty-note">No service categories yet. Run <code>python seed.py</code> to add them.</p>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- ===== WHY US ===== -->
+<section class="why-us" id="why-us">
+  <div class="section-header">
+    <span class="section-pill">Why ServeLocal</span>
+    <h2>Built for trust &amp; transparency</h2>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">🎯</div>
+      <h3>Availability-Aware Matching</h3>
+      <p>We only show workers who are actually available and within your service radius — no ghost listings.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">💰</div>
+      <h3>Transparent Pricing</h3>
+      <p>Workers post real price quotes. You compare, negotiate, and agree — no hidden charges.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">⭐</div>
+      <h3>Verified Reviews</h3>
+      <p>Reviews are tied to completed bookings — so you know they are genuine, not fake.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🛡️</div>
+      <h3>Worker Autonomy</h3>
+      <p>Workers set their own hours, rates, and service areas. They decline unsuitable jobs freely.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📱</div>
+      <h3>Mobile-First Design</h3>
+      <p>Built for smartphones — easy forms, large touch targets, and clear status updates.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔒</div>
+      <h3>Privacy Protected</h3>
+      <p>Exact addresses are never shown to workers until a booking is confirmed.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== DUAL CTA ===== -->
+{% if not current_user.is_authenticated %}
+<section class="dual-cta" id="join">
+  <div class="dual-cta-card customer-cta">
+    <div class="cta-icon">🏠</div>
+    <h2>Need a service?</h2>
+    <p>Post a job in minutes and get offers from skilled local workers near you.</p>
+    <a href="{{ url_for('auth.register_customer') }}" class="btn btn-primary btn-lg" id="join-customer-btn">Register as Customer</a>
+    <a href="{{ url_for('auth.login') }}" class="cta-login-link">Already have an account? Login →</a>
+  </div>
+  <div class="dual-cta-card worker-cta">
+    <div class="cta-icon">🔧</div>
+    <h2>Provide services?</h2>
+    <p>Join our platform, set your own hours, and receive relevant job requests nearby.</p>
+    <a href="{{ url_for('auth.register_worker') }}" class="btn btn-outline-dark btn-lg" id="join-worker-btn">Register as Worker</a>
+    <a href="{{ url_for('auth.login') }}" class="cta-login-link">Already registered? Login →</a>
+  </div>
+</section>
+{% endif %}
+
+{% endblock %}

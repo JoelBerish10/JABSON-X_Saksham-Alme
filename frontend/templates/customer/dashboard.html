@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}My Dashboard{% endblock %}
+
+{% block content %}
+<div class="dashboard-page">
+  <div class="dashboard-header">
+    <div>
+      <h1>Welcome, {{ current_user.full_name.split()[0] }} 👋</h1>
+      <p class="dashboard-subtitle">Manage your service requests and bookings</p>
+    </div>
+    <a href="{{ url_for('customer.post_job') }}" class="btn btn-primary btn-lg" id="dash-post-job-btn">
+      + Post a Job
+    </a>
+  </div>
+
+  <!-- Quick category shortcuts -->
+  <div class="quick-cats">
+    {% for cat in categories %}
+    <a href="{{ url_for('customer.post_job') }}" class="quick-cat" title="{{ cat.name }}">
+      <span>{{ cat.icon }}</span>
+      <small>{{ cat.name.split()[0] }}</small>
+    </a>
+    {% endfor %}
+  </div>
+
+  <!-- Job list -->
+  <section class="section-card">
+    <h2 class="section-card-title">My Job Requests</h2>
+    {% if jobs %}
+    <div class="job-list">
+      {% for job in jobs %}
+      <a href="{{ url_for('customer.view_job', job_id=job.id) }}" class="job-list-item" id="job-item-{{ job.id }}">
+        <div class="job-list-icon">{{ job.category.icon }}</div>
+        <div class="job-list-body">
+          <span class="job-list-title">{{ job.title }}</span>
+          <span class="job-list-meta">{{ job.category.name }} · {{ job.location_text or 'No location' }}</span>
+          <span class="job-list-time">{{ job.created_at.strftime('%d %b %Y, %I:%M %p') }}</span>
+        </div>
+        <div class="job-list-right">
+          <span class="status-badge status-{{ job.status }}">{{ job.status.replace('_',' ').title() }}</span>
+          {% set offer_count = job.offers | selectattr('status','equalto','pending') | list | length %}
+          {% if offer_count > 0 %}
+          <span class="offer-count-badge">{{ offer_count }} offer{{ 's' if offer_count != 1 }}</span>
+          {% endif %}
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+      <div class="empty-icon">📋</div>
+      <p>No job requests yet.</p>
+      <a href="{{ url_for('customer.post_job') }}" class="btn btn-primary" id="empty-post-btn">Post Your First Job</a>
+    </div>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

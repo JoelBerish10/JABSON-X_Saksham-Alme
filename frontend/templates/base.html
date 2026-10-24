@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="{% block meta_description %}Hyperlocal services marketplace — connect with trusted local workers for plumbing, electrical, cleaning, and more.{% endblock %}" />
+  <title>{% block title %}ServeLocal{% endblock %} | ServeLocal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+<!-- ========== NAV ========== -->
+<header class="site-header" id="site-header">
+  <nav class="nav-container">
+    <a href="{{ url_for('main.index') }}" class="nav-logo">
+      <span class="logo-icon">⚡</span>
+      <span class="logo-text">Serve<strong>Local</strong></span>
+    </a>
+
+    <ul class="nav-links" id="nav-links">
+      <li><a href="{{ url_for('main.index') }}" class="nav-link">Home</a></li>
+      {% if current_user.is_authenticated %}
+        {% if current_user.role == 'customer' %}
+          <li><a href="{{ url_for('customer.dashboard') }}" class="nav-link">Dashboard</a></li>
+          <li><a href="{{ url_for('customer.post_job') }}" class="nav-link btn-nav-cta">Post a Job</a></li>
+        {% elif current_user.role == 'worker' %}
+          <li><a href="{{ url_for('worker.dashboard') }}" class="nav-link">Dashboard</a></li>
+          <li><a href="{{ url_for('worker.edit_profile') }}" class="nav-link">Profile</a></li>
+          <li><a href="{{ url_for('worker.manage_availability') }}" class="nav-link">Availability</a></li>
+        {% elif current_user.role == 'admin' %}
+          <li><a href="{{ url_for('admin.dashboard') }}" class="nav-link">Admin</a></li>
+        {% endif %}
+        <li class="nav-user-info">
+          <span class="nav-badge nav-badge-{{ current_user.role }}">{{ current_user.role }}</span>
+          <span class="nav-name">{{ current_user.full_name.split()[0] }}</span>
+        </li>
+        <li><a href="{{ url_for('auth.logout') }}" class="nav-link nav-logout">Logout</a></li>
+      {% else %}
+        <li><a href="{{ url_for('auth.login') }}" class="nav-link">Login</a></li>
+        <li><a href="{{ url_for('auth.register_customer') }}" class="nav-link btn-nav-cta">Get Started</a></li>
+      {% endif %}
+    </ul>
+
+    <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+</header>
+
+<!-- ========== FLASH MESSAGES ========== -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+  <div class="flash-container" id="flash-container">
+    {% for category, message in messages %}
+    <div class="flash flash-{{ category }}" role="alert">
+      <span class="flash-icon">
+        {% if category == 'success' %}✓{% elif category == 'danger' %}✗{% elif category == 'warning' %}⚠{% else %}ℹ{% endif %}
+      </span>
+      <span class="flash-msg">{{ message }}</span>
+      <button class="flash-close" onclick="this.parentElement.remove()">×</button>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+{% endwith %}
+
+<!-- ========== MAIN ========== -->
+<main class="main-content" id="main-content">
+  {% block content %}{% endblock %}
+</main>
+
+<!-- ========== FOOTER ========== -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <span class="logo-icon">⚡</span>
+      <span class="logo-text">Serve<strong>Local</strong></span>
+      <p class="footer-tagline">Trusted local services, at your doorstep.</p>
+    </div>
+    <div class="footer-links">
+      <div class="footer-col">
+        <h4>For Customers</h4>
+        <a href="{{ url_for('auth.register_customer') }}">Register</a>
+        <a href="{{ url_for('auth.login') }}">Login</a>
+        {% if current_user.is_authenticated and current_user.role == 'customer' %}
+          <a href="{{ url_for('customer.post_job') }}">Post a Job</a>
+        {% endif %}
+      </div>
+      <div class="footer-col">
+        <h4>For Workers</h4>
+        <a href="{{ url_for('auth.register_worker') }}">Register</a>
+        <a href="{{ url_for('auth.login') }}">Login</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>&copy; 2025 ServeLocal. Prices and availability are as provided by workers. We do not guarantee specific response times.</p>
+  </div>
+</footer>
+
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+{% block extra_scripts %}{% endblock %}
+</body>
+</html>

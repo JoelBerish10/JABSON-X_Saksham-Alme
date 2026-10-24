@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+{% block title %}Job — {{ job.title }}{% endblock %}
+
+{% block content %}
+<div class="form-page">
+  <a href="{{ url_for('customer.dashboard') }}" class="back-link">← My Dashboard</a>
+
+  <!-- Job summary card -->
+  <div class="job-detail-card">
+    <div class="job-detail-header">
+      <div class="job-detail-icon">{{ job.category.icon }}</div>
+      <div class="job-detail-info">
+        <span class="status-badge status-{{ job.status }} status-lg">{{ job.status.replace('_',' ').title() }}</span>
+        <h1>{{ job.title }}</h1>
+        <p class="job-meta">
+          {{ job.category.name }} ·
+          {{ job.location_text or 'No location' }} ·
+          <span class="urgency-tag urgency-{{ job.urgency }}">{{ job.urgency.title() }}</span>
+        </p>
+      </div>
+    </div>
+    <div class="job-detail-body">
+      <p class="job-description">{{ job.description }}</p>
+      {% if job.budget_min or job.budget_max %}
+      <p class="job-budget">
+        💰 Budget:
+        {% if job.budget_min and job.budget_max %}₹{{ job.budget_min|int }} – ₹{{ job.budget_max|int }}
+        {% elif job.budget_max %}Up to ₹{{ job.budget_max|int }}
+        {% else %}From ₹{{ job.budget_min|int }}{% endif %}
+      </p>
+      {% endif %}
+      {% if job.preferred_time %}
+      <p class="job-time">🗓️ Preferred time: {{ job.preferred_time.strftime('%d %b %Y, %I:%M %p') }}</p>
+      {% endif %}
+      {% if job.photo_filename %}
+      <img src="{{ url_for('static', filename='uploads/' + job.photo_filename) }}" alt="Job photo" class="job-photo" />
+      {% endif %}
+      <p class="job-posted-at">Posted: {{ job.created_at.strftime('%d %b %Y, %I:%M %p') }}</p>
+    </div>
+
+    {% if job.status not in ('completed','cancelled','disputed') %}
+    <form method="POST" action="{{ url_for('customer.cancel_job', job_id=job.id) }}" class="inline-form" id="cancel-job-form-{{ job.id }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+      <button type="submit" class="btn btn-danger-outline btn-sm"
+              onclick="return confirm('Cancel this job? All pending offers will be withdrawn.');"
+              id="cancel-job-btn-{{ job.id }}">
+        Cancel Job
+      </button>
+    </form>
+    {% endif %}
+  </div>
+
+  <!-- Booking status if confirmed -->
+  {% if booking %}
+  <div class="section-card">
+    <h2 class="section-card-title">📦 Booking Status</h2>
+    <div class="booking-status-tracker">
+      {% set statuses = ['confirmed','worker_on_the_way','in_progress','completed'] %}
+      {% for s in statuses %}
+      <div class="tracker-step {% if booking.status == s %}active{% elif statuses.index(s) < statuses.index(booking.status) %}done{% endif %}">
+        <div class="tracker-dot"></div>
+        <span>{{ s.replace('_',' ').title() }}</span>
+      </div>
+      {% if not loop.last %}<div class="tracker-line"></div>{% endif %}
+      {% endfor %}
+    </div>
+    <a href="{{ url_for('customer.booking_detail', booking_id=booking.id) }}" class="btn btn-primary" id="view-booking-btn">
+      View Booking Details →
+    </a>
+  </div>
+  {% endif %}
+
+  <!-- Offers -->
+  <div class="section-card">
+    <h2 class="section-card-title">
+      💼 Worker Offers
+      {% if offers %}
+      <span class="offer-count-badge">{{ offers|length }}</span>
+      {% endif %}
+    </h2>
+
+    {% if offers %}
+    <div class="offers-list">
+      {% for offer in offers %}
+      <div class="offer-card {% if offer.status == 'accepted' %}offer-accepted{% elif offer.status != 'pending' %}offer-inactive{% endif %}" id="offer-card-{{ offer.id }}">
+        <div class="offer-card-header">
+          <a href="{{ url_for('worker.public_profile', worker_id=offer.worker.id) }}" class="offer-worker-info">
+            <div class="offer-avatar">{{ offer.worker.user.full_name[0].upper() }}</div>
+            <div>
+              <strong>{{ offer.worker.user.full_name }}</strong>
+              <span>{{ offer.worker.experience_years }} yr{% if offer.worker.experience_years != 1 %}s{% endif %} exp · {{ offer.worker.city or '—' }}</span>
+              {% if offer.worker.average_rating %}
+              <span class="rating-stars">⭐ {{ offer.worker.average_rating }}</span>
+              {% endif %}
+            </div>
+          </a>
+          <div class="offer-price-block">
+            <span class="offer-price">₹{{ offer.quoted_price|int }}</span>
+            <span class="offer-status-tag offer-status-{{ offer.status }}">{{ offer.status.title() }}</span>
+          </div>
+        </div>
+
+        {% if offer.estimated_arrival_minutes %}
+        <p class="offer-eta">⏱ Est. arrival: ~{{ offer.estimated_arrival_minutes }} min <span class="est-note">(estimate only)</span></p>
+        {% endif %}
+
+        {% if offer.message %}
+        <p class="offer-message">"{{ offer.message }}"</p>
+        {% endif %}
+
+        <div class="offer-meta">
+          <span>{{ offer.worker.verification_status.replace('_',' ').title() }}</span>
+          <span>{{ offer.worker.total_bookings }} jobs completed</span>
+          <span>Submitted {{ offer.created_at.strftime('%d %b, %I:%M %p') }}</span>
+        </div>
+
+        {% if offer.status == 'pending' and job.status in ('requested','matching','offers_received') and not booking %}
+        <form method="POST"
+              action="{{ url_for('customer.accept_offer', job_id=job.id, offer_id=offer.id) }}"
+              class="inline-form" id="accept-offer-form-{{ offer.id }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+          <button type="submit" class="btn btn-primary btn-full" id="accept-offer-btn-{{ offer.id }}"
+                  onclick="return confirm('Accept this offer from {{ offer.worker.user.full_name }} for ₹{{ offer.quoted_price|int }}?');">
+            ✓ Accept This Offer
+          </button>
+        </form>
+        {% elif offer.status == 'accepted' %}
+        <p class="offer-accepted-note">✓ You accepted this offer</p>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+
+    {% else %}
+    <div class="empty-state">
+      <div class="empty-icon">⏳</div>
+      <p>No offers yet. Workers will be notified of your request.</p>
+      <p class="empty-hint">If no workers respond within 24 hours, try widening the budget or choosing a scheduled time.</p>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
