@@ -66,7 +66,7 @@
   --transition-slow: 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 
   /* Layout */
-  --max-width: 1260px;
+  --max-width: 1680px;
   --header-height: 84px;
   --font-main: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif;
 }
@@ -117,8 +117,9 @@ ul, ol {
 /* ── GLOBAL LAYOUT CONTAINER ── */
 .uc-container {
   max-width: var(--max-width);
+  width: 100%;
   margin: 0 auto;
-  padding: 0 1.5rem;
+  padding: 0 3.5rem;
 }
 
 /* ──────────────────────────────────────────
@@ -134,7 +135,9 @@ ul, ol {
 }
 .announcement-inner {
   max-width: var(--max-width);
+  width: 100%;
   margin: 0 auto;
+  padding: 0 3.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -193,13 +196,14 @@ ul, ol {
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 .nav-container {
-  max-width: var(--max-width);
-  margin: 0 auto;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
   height: 100%;
-  padding: 0 1.5rem;
+  padding: 0 3.5rem;
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 24px;
 }
 
 /* Brand Logo */
@@ -311,9 +315,9 @@ ul, ol {
 
 /* Wide Desktop Search Bar */
 .nav-search-bar {
-  flex: 1 1 260px;
+  flex: 1 1 320px;
   min-width: 240px;
-  max-width: 400px;
+  max-width: 520px;
   position: relative;
 }
 .nav-search-bar input {
@@ -715,8 +719,8 @@ ul, ol {
 }
 .uc-hero-grid {
   display: grid;
-  grid-template-columns: 1.15fr 0.85fr;
-  gap: 56px;
+  grid-template-columns: 1.25fr 0.75fr;
+  gap: 64px;
   align-items: center;
 }
 
@@ -739,21 +743,21 @@ ul, ol {
 }
 
 .uc-hero-title {
-  font-size: clamp(2.2rem, 3.4vw, 3rem);
+  font-size: clamp(2.4rem, 3.8vw, 3.5rem);
   font-weight: 800;
   color: var(--clr-text-title);
-  line-height: 1.22;
+  line-height: 1.18;
   letter-spacing: -0.03em;
-  margin-bottom: 20px;
+  margin-bottom: 22px;
 }
 .brand-accent-text {
   color: #ffffff;
 }
 .uc-hero-sub {
-  font-size: 16.5px;
+  font-size: 17px;
   color: var(--clr-text-muted);
   line-height: 1.7;
-  max-width: 580px;
+  max-width: 720px;
   margin-bottom: 36px;
 }
 
@@ -1839,8 +1843,9 @@ ul, ol {
 }
 .footer-container {
   max-width: var(--max-width);
+  width: 100%;
   margin: 0 auto;
-  padding: 0 1.5rem;
+  padding: 0 3.5rem;
 }
 .trust-pill-grid {
   display: grid;
@@ -2571,9 +2576,10 @@ ul, ol {
 
 /* Dashboard Page Container */
 .dashboard-page {
-  max-width: 960px;
+  max-width: var(--max-width);
+  width: 100%;
   margin: 0 auto;
-  padding: 32px 24px 60px;
+  padding: 36px 3.5rem 64px;
 }
 
 /* Dashboard Hero Header */
@@ -2902,5 +2908,27 @@ ul, ol {
     width: 100%;
     justify-content: flex-start;
     margin-top: 8px;
+  }
+}
+
+/* ── Wide Container Responsiveness ── */
+@media (max-width: 1200px) {
+  .uc-container,
+  .nav-container,
+  .footer-container,
+  .announcement-inner,
+  .dashboard-page {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+@media (max-width: 768px) {
+  .uc-container,
+  .nav-container,
+  .footer-container,
+  .announcement-inner,
+  .dashboard-page {
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
   }
 }
