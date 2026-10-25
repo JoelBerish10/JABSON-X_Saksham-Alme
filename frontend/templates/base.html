@@ -3,33 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="{% block meta_description %}ServeLocal — Instant home services marketplace. Book verified local plumbers, electricians, cleaners, carpenters, and technicians at transparent prices.{% endblock %}" />
-  <title>{% block title %}ServeLocal{% endblock %} | Instant Home Services</title>
+  <meta name="description" content="{% block meta_description %}GharSeva — Instant home services marketplace. Book verified local plumbers, electricians, cleaners, carpenters, and technicians at transparent prices.{% endblock %}" />
+  <title>{% block title %}GharSeva{% endblock %} | Instant Home Services</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
   <script>
     (function () {
-      var savedTheme = localStorage.getItem('servelocal_theme') || 'light';
-      document.documentElement.setAttribute('data-theme', savedTheme);
+      document.documentElement.setAttribute('data-theme', 'dark');
     })();
   </script>
   {% block extra_head %}{% endblock %}
 </head>
 <body class="uc-app">
 
-<!-- ========== TOP ANNOUNCEMENT BAR ========== -->
-<div class="top-announcement-bar">
-  <div class="announcement-inner">
-    <div class="announcement-tag">
-      <span class="badge-pulsing-dot"></span>
-      <span class="announcement-highlight">Instant Dispatch</span>
-    </div>
-    <span class="announcement-text">Top-rated background-checked workers ready in your locality. Flat ₹100 OFF on your first booking with code <strong>SERVE100</strong></span>
-    <a href="#services" class="announcement-link">Explore Services &rarr;</a>
-  </div>
-</div>
+
 
 <!-- ========== MAIN SITE HEADER ========== -->
 <header class="site-header" id="site-header">
@@ -37,13 +26,9 @@
     
     <!-- Brand Logo -->
     <a href="{{ url_for('main.index') }}" class="nav-logo">
-      <div class="logo-mark">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
-        </svg>
-      </div>
+      <div class="logo-mark">(GS)</div>
       <div class="logo-text-group">
-        <span class="logo-brand">Serve<strong>Local</strong></span>
+        <span class="logo-brand">Ghar<strong>Seva</strong></span>
         <span class="logo-tagline">HOME SERVICES IN MINUTES</span>
       </div>
     </a>
@@ -59,7 +44,7 @@
       <div class="location-details">
         <span class="location-label">Location</span>
         <div class="location-selected">
-          <strong id="current-location-text">Indiranagar, Bengaluru</strong>
+          <strong id="current-location-text">Andheri West, Mumbai</strong>
           <span class="loc-dropdown-chevron">&#9662;</span>
         </div>
       </div>
@@ -119,25 +104,7 @@
       </li>
       <li><a href="#services" class="nav-item-link nav-hide-md">Services</a></li>
 
-      <!-- Theme Toggle (Light / Dark) -->
-      <li>
-        <button class="theme-toggle-btn" id="theme-toggle" type="button" aria-label="Toggle theme" title="Toggle Light / Dark Mode">
-          <svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="5"></circle>
-            <line x1="12" y1="1" x2="12" y2="3"></line>
-            <line x1="12" y1="21" x2="12" y2="23"></line>
-            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-            <line x1="1" y1="12" x2="3" y2="12"></line>
-            <line x1="21" y1="12" x2="23" y2="12"></line>
-            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-          </svg>
-          <svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-          </svg>
-        </button>
-      </li>
+
       
       {% if current_user.is_authenticated %}
         {% if current_user.role == 'customer' %}
@@ -208,14 +175,14 @@
     </div>
 
     <div class="popular-cities-grid">
-      <div class="city-card active" onclick="selectCity('Indiranagar, Bengaluru')">
+      <div class="city-card" onclick="selectCity('Indiranagar, Bengaluru')">
         <span class="city-dot bg-indigo"></span>
         <span class="city-name">Bengaluru</span>
-        <span class="city-badge">Fastest Dispatch</span>
       </div>
-      <div class="city-card" onclick="selectCity('Andheri West, Mumbai')">
+      <div class="city-card active" onclick="selectCity('Andheri West, Mumbai')">
         <span class="city-dot bg-blue"></span>
         <span class="city-name">Mumbai</span>
+        <span class="city-badge">Fastest Dispatch</span>
       </div>
       <div class="city-card" onclick="selectCity('Connaught Place, Delhi NCR')">
         <span class="city-dot bg-amber"></span>
@@ -318,12 +285,8 @@
   <div class="footer-container footer-body">
     <div class="footer-column brand-column">
       <div class="footer-brand">
-        <span class="footer-logo-mark">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
-          </svg>
-        </span>
-        <span class="footer-brand-title">Serve<strong>Local</strong></span>
+        <span class="footer-logo-mark">(GS)</span>
+        <span class="footer-brand-title">Ghar<strong>Seva</strong></span>
       </div>
       <p class="footer-desc">
         India's modern hyperlocal service marketplace connecting homeowners with independent, trusted local workers for urgent repairs, installations, and daily household maintenance.
@@ -360,7 +323,7 @@
 
   <div class="footer-bottom">
     <div class="footer-container bottom-inner">
-      <p>&copy; {{ now().year if now is defined else '2026' }} ServeLocal Technologies Inc. All rights reserved.</p>
+      <p>&copy; {{ now().year if now is defined else '2026' }} GharSeva Technologies Inc. All rights reserved.</p>
       <div class="bottom-links">
         <a href="#">Privacy Policy</a>
         <a href="#">Terms of Service</a>

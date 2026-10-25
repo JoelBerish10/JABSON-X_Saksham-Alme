@@ -17,9 +17,12 @@ def login():
         return _redirect_dashboard(current_user)
 
     if request.method == "POST":
-        phone = request.form.get("phone", "").strip()
+        identifier = request.form.get("phone", "").strip()
         password = request.form.get("password", "").strip()
-        user = User.query.filter_by(phone=phone).first()
+        # Support login via phone number OR email
+        user = User.query.filter_by(phone=identifier).first()
+        if not user and "@" in identifier:
+            user = User.query.filter_by(email=identifier).first()
         if user and user.check_password(password) and user.is_active:
             login_user(user)
             flash("Welcome back, " + user.full_name + "!", "success")
@@ -27,7 +30,7 @@ def login():
             if next_page:
                 return redirect(next_page)
             return _redirect_dashboard(user)
-        flash("Invalid phone number or password.", "danger")
+        flash("Invalid phone/email or password.", "danger")
 
     return render_template("auth/login.html")
 

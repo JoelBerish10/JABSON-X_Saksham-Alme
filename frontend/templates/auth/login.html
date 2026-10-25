@@ -5,28 +5,25 @@
 <div class="auth-page">
   <div class="auth-card">
     <div class="auth-header">
-      <div class="auth-logo">⚡</div>
+      <div class="auth-logo">(GS)</div>
       <h1>Welcome Back</h1>
-      <p>Login to your ServeLocal account</p>
+      <p>Login to your GharSeva account</p>
     </div>
 
     <form method="POST" action="{{ url_for('auth.login') }}" class="auth-form" id="login-form">
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
 
       <div class="form-group">
-        <label for="phone">Phone Number</label>
+        <label for="phone">Phone Number or Email</label>
         <div class="input-wrapper">
-          <span class="input-icon">📞</span>
-          <input type="tel" id="phone" name="phone" required placeholder="e.g. 9876543210" autocomplete="tel" />
+          <input type="text" id="phone" name="phone" required placeholder="e.g. 9876543210 or you@email.com" autocomplete="username" />
         </div>
       </div>
 
       <div class="form-group">
         <label for="password">Password</label>
         <div class="input-wrapper">
-          <span class="input-icon">🔒</span>
           <input type="password" id="password" name="password" required placeholder="Your password" autocomplete="current-password" />
-          <button type="button" class="toggle-password" onclick="togglePassword('password')" aria-label="Toggle password visibility">👁</button>
         </div>
       </div>
 

@@ -1,17 +1,22 @@
 {% extends "base.html" %}
-{% block title %}Worker Dashboard{% endblock %}
+{% block title %}Service Provider Dashboard{% endblock %}
 
 {% block content %}
-<div class="dashboard-page">
-  <div class="dashboard-header">
-    <div>
-      <h1>Hello, {{ current_user.full_name.split()[0] }} 👋</h1>
-      <p class="dashboard-subtitle">
-        <span class="ver-badge ver-{{ worker.verification_status }}">{{ worker.verification_status.replace('_',' ').title() }}</span>
-        {{ worker.city or '' }}
-        {% if worker.average_rating %}· ⭐ {{ worker.average_rating }}{% endif %}
-        · {{ worker.total_bookings }} jobs done
-      </p>
+<div class="dashboard-page worker-dashboard">
+
+  <!-- Provider Hero Header -->
+  <div class="dash-hero worker-hero">
+    <div class="dash-hero-left">
+      <div class="dash-avatar-lg worker-avatar">{{ current_user.full_name[0] | upper }}</div>
+      <div>
+        <h1>Hello, {{ current_user.full_name.split()[0] }}</h1>
+        <p class="dashboard-subtitle">
+          <span class="ver-badge ver-{{ worker.verification_status }}">{{ worker.verification_status.replace('_',' ').title() }}</span>
+          {{ worker.city or '' }}
+          {% if worker.average_rating %} · Rating: {{ worker.average_rating }}{% endif %}
+          · {{ worker.total_bookings }} jobs done
+        </p>
+      </div>
     </div>
     <div class="dashboard-header-actions">
       <a href="{{ url_for('worker.edit_profile') }}" class="btn btn-ghost">Edit Profile</a>
@@ -19,9 +24,9 @@
     </div>
   </div>
 
-  <!-- Quick stats -->
+  <!-- Quick Stats -->
   <div class="stats-row">
-    <div class="stat-card">
+    <div class="stat-card stat-highlight">
       <span class="stat-card-num">{{ available_jobs|length }}</span>
       <span class="stat-card-label">Jobs Available</span>
     </div>
@@ -41,12 +46,16 @@
 
   <!-- Available Jobs -->
   <section class="section-card">
-    <h2 class="section-card-title">📋 Available Job Requests for You</h2>
+    <div class="section-card-header">
+      <h2 class="section-card-title">Available Job Requests</h2>
+      {% if available_jobs %}
+      <span class="section-card-count">{{ available_jobs|length }} jobs</span>
+      {% endif %}
+    </div>
     {% if available_jobs %}
     <div class="job-list">
       {% for job in available_jobs %}
       <a href="{{ url_for('worker.view_job', job_id=job.id) }}" class="job-list-item" id="avail-job-{{ job.id }}">
-        <div class="job-list-icon">{{ job.category.icon }}</div>
         <div class="job-list-body">
           <span class="job-list-title">{{ job.title }}</span>
           <span class="job-list-meta">{{ job.category.name }} · {{ job.location_text or 'No location' }}</span>
@@ -62,21 +71,24 @@
     </div>
     {% else %}
     <div class="empty-state">
-      <div class="empty-icon">🔍</div>
-      <p>No matching job requests right now.</p>
-      <p class="empty-hint">Make sure your profile has the right service categories and your availability is set.</p>
+      <h3>No matching jobs right now</h3>
+      <p>Ensure your profile has the right service categories and your availability is updated.</p>
     </div>
     {% endif %}
   </section>
 
   <!-- My Offers -->
   <section class="section-card">
-    <h2 class="section-card-title">💬 My Offers</h2>
+    <div class="section-card-header">
+      <h2 class="section-card-title">My Offers</h2>
+      {% if my_offers %}
+      <span class="section-card-count">{{ my_offers|length }} total</span>
+      {% endif %}
+    </div>
     {% if my_offers %}
     <div class="job-list">
       {% for offer in my_offers %}
       <div class="job-list-item" id="my-offer-{{ offer.id }}">
-        <div class="job-list-icon">{{ offer.job.category.icon }}</div>
         <div class="job-list-body">
           <span class="job-list-title">{{ offer.job.title }}</span>
           <span class="job-list-meta">Quoted: ₹{{ offer.quoted_price|int }}</span>
@@ -92,18 +104,24 @@
       {% endfor %}
     </div>
     {% else %}
-    <p class="empty-note">You haven't submitted any offers yet.</p>
+    <div class="empty-state">
+      <p>You haven't submitted any offers yet. Browse available jobs above.</p>
+    </div>
     {% endif %}
   </section>
 
   <!-- Active Bookings -->
   <section class="section-card">
-    <h2 class="section-card-title">📦 My Bookings</h2>
+    <div class="section-card-header">
+      <h2 class="section-card-title">My Bookings</h2>
+      {% if my_bookings %}
+      <span class="section-card-count">{{ my_bookings|length }} total</span>
+      {% endif %}
+    </div>
     {% if my_bookings %}
     <div class="job-list">
       {% for booking in my_bookings %}
       <a href="{{ url_for('worker.booking_detail', booking_id=booking.id) }}" class="job-list-item" id="my-booking-{{ booking.id }}">
-        <div class="job-list-icon">{{ booking.job.category.icon }}</div>
         <div class="job-list-body">
           <span class="job-list-title">{{ booking.job.title }}</span>
           <span class="job-list-meta">₹{{ booking.agreed_price|int }} · {{ booking.job.location_text or '—' }}</span>
@@ -116,7 +134,9 @@
       {% endfor %}
     </div>
     {% else %}
-    <p class="empty-note">No bookings yet.</p>
+    <div class="empty-state">
+      <p>No bookings yet. Start by making offers on available jobs.</p>
+    </div>
     {% endif %}
   </section>
 </div>

@@ -3,17 +3,48 @@
 
 {% block content %}
 <div class="dashboard-page">
-  <div class="dashboard-header">
-    <div>
-      <h1>Welcome, {{ current_user.full_name.split()[0] }} 👋</h1>
-      <p class="dashboard-subtitle">Manage your service requests and bookings</p>
+
+  <!-- Dashboard Hero Header -->
+  <div class="dash-hero">
+    <div class="dash-hero-left">
+      <div class="dash-avatar-lg">{{ current_user.full_name[0] | upper }}</div>
+      <div>
+        <h1>Welcome back, {{ current_user.full_name.split()[0] }} 👋</h1>
+        <p class="dashboard-subtitle">Your home services dashboard</p>
+      </div>
     </div>
     <a href="{{ url_for('customer.post_job') }}" class="btn btn-primary btn-lg" id="dash-post-job-btn">
-      + Post a Job
+      + Post New Request
     </a>
   </div>
 
-  <!-- Quick category shortcuts -->
+  <!-- Quick Stats -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <span class="stat-card-num">{{ jobs | length }}</span>
+      <span class="stat-card-label">Total Requests</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-card-num">{{ jobs | selectattr('status','equalto','requested') | list | length }}</span>
+      <span class="stat-card-label">Active</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-card-num">{{ jobs | selectattr('status','equalto','completed') | list | length }}</span>
+      <span class="stat-card-label">Completed</span>
+    </div>
+    <div class="stat-card">
+      {% set total_offers = [] %}
+      {% for job in jobs %}
+        {% for offer in job.offers if offer.status == 'pending' %}
+          {% if total_offers.append(1) %}{% endif %}
+        {% endfor %}
+      {% endfor %}
+      <span class="stat-card-num">{{ total_offers | length }}</span>
+      <span class="stat-card-label">Pending Offers</span>
+    </div>
+  </div>
+
+  <!-- Quick Category Shortcuts -->
   <div class="quick-cats">
     {% for cat in categories %}
     <a href="{{ url_for('customer.post_job') }}" class="quick-cat" title="{{ cat.name }}">
@@ -23,9 +54,14 @@
     {% endfor %}
   </div>
 
-  <!-- Job list -->
+  <!-- Job Requests List -->
   <section class="section-card">
-    <h2 class="section-card-title">My Job Requests</h2>
+    <div class="section-card-header">
+      <h2 class="section-card-title">📋 My Job Requests</h2>
+      {% if jobs %}
+      <span class="section-card-count">{{ jobs | length }} total</span>
+      {% endif %}
+    </div>
     {% if jobs %}
     <div class="job-list">
       {% for job in jobs %}
@@ -49,8 +85,9 @@
     {% else %}
     <div class="empty-state">
       <div class="empty-icon">📋</div>
-      <p>No job requests yet.</p>
-      <a href="{{ url_for('customer.post_job') }}" class="btn btn-primary" id="empty-post-btn">Post Your First Job</a>
+      <h3>No service requests yet</h3>
+      <p>Post your first request and get instant quotes from verified local professionals.</p>
+      <a href="{{ url_for('customer.post_job') }}" class="btn btn-primary" id="empty-post-btn">Post Your First Request</a>
     </div>
     {% endif %}
   </section>

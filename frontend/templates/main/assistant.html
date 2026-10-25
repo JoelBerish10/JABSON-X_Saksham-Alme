@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
-{% block title %}AI Assistant | ServeLocal{% endblock %}
-{% block meta_description %}Chat with ServeLocal's AI Assistant to find verified workers, compare service prices, and get answers on hyperlocal home services.{% endblock %}
+{% block title %}AI Assistant | GharSeva{% endblock %}
+{% block meta_description %}Chat with GharSeva's AI Assistant to find verified workers, compare service prices, and get answers on hyperlocal home services.{% endblock %}
 
 {% block content %}
 <div class="assistant-container">
@@ -12,10 +12,10 @@
         <span class="pulse-dot"></span> Retrieval-Augmented Generation Active
       </span>
       <span class="assistant-model-pill" id="engine-status-pill">
-        ⚡ Loading Knowledge Base...
+        Loading Knowledge Base...
       </span>
     </div>
-    <h1 class="assistant-title">🤖 ServeLocal AI Assistant</h1>
+    <h1 class="assistant-title">GharSeva AI Assistant</h1>
     <p class="assistant-subtitle">
       Powered by real-time marketplace knowledge. Ask about services, instant quotes, worker availability, or booking procedures.
     </p>
@@ -24,20 +24,20 @@
     <div class="prompt-chips-wrapper">
       <span class="chips-label">Popular Questions:</span>
       <div class="prompt-chips">
-        <button class="prompt-chip" onclick="askPreset('I need an urgent plumber for a leaking pipe in Bengaluru')">
-          🔧 Emergency Plumber
+        <button class="prompt-chip" onclick="askPreset('I need an urgent plumber for a leaking pipe in Mumbai')">
+          Emergency Plumber
         </button>
         <button class="prompt-chip" onclick="askPreset('How much does electrical wiring and fan installation cost?')">
-          ⚡ Electrician Pricing
+          Electrician Pricing
         </button>
         <button class="prompt-chip" onclick="askPreset('What services are covered under House & Deep Cleaning?')">
-          🧹 Deep Cleaning
+          Deep Cleaning
         </button>
         <button class="prompt-chip" onclick="askPreset('How does worker verification and background check work?')">
-          🛡️ Worker Verification
+          Worker Verification
         </button>
         <button class="prompt-chip" onclick="askPreset('How do I post a job and get offers?')">
-          📋 How Booking Works
+          How Booking Works
         </button>
       </div>
     </div>
@@ -49,11 +49,11 @@
     <div class="chat-messages" id="chat-messages">
       <!-- Welcome Message -->
       <div class="chat-bubble bot-bubble">
-        <div class="bubble-avatar">⚡</div>
+        <div class="bubble-avatar">GS</div>
         <div class="bubble-content">
-          <div class="bubble-author">LocalBot · ServeLocal RAG Assistant</div>
+          <div class="bubble-author">LocalBot · GharSeva RAG Assistant</div>
           <div class="bubble-text">
-            👋 Hi there! I'm your AI hyperlocal assistant. I have live access to our verified service categories, local worker profiles in Bengaluru, price guides, and platform rules.
+            Hello! I'm your AI hyperlocal assistant. I have live access to our verified service categories, local worker profiles in Mumbai, price guides, and platform rules.
             <br /><br />
             How can I help you today?
           </div>
@@ -424,9 +424,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     const pill = document.getElementById('engine-status-pill');
     if (data.status === 'ready') {
       const provider = data.gemini_enabled ? 'Gemini AI' : (data.openai_enabled ? 'OpenAI' : 'Local Hybrid Engine');
-      pill.textContent = `📚 ${data.total_documents} documents indexed · ${provider}`;
+      pill.textContent = `${data.total_documents} documents indexed · ${provider}`;
     } else {
-      pill.textContent = '⚡ Initializing Index...';
+      pill.textContent = 'Initializing Index...';
     }
   } catch (err) {
     console.warn('RAG status check:', err);
@@ -525,7 +525,7 @@ function appendBotMessage(text, sources = [], actions = [], provider = '') {
   const providerLabel = provider ? ` · ${provider}` : '';
 
   bubble.innerHTML = `
-    <div class="bubble-avatar">⚡</div>
+    <div class="bubble-avatar">GS</div>
     <div class="bubble-content">
       <div class="bubble-author">LocalBot${providerLabel}</div>
       <div class="bubble-text">${formatMarkdownText(text)}</div>
@@ -543,7 +543,7 @@ function appendTypingIndicator(id) {
   typing.id = id;
   typing.className = 'chat-bubble bot-bubble';
   typing.innerHTML = `
-    <div class="bubble-avatar">⚡</div>
+    <div class="bubble-avatar">GS</div>
     <div class="bubble-content">
       <div class="bubble-author">LocalBot</div>
       <div class="bubble-text" style="color: #64748B; font-style: italic;">
