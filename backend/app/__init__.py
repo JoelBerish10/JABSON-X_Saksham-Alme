@@ -52,12 +52,18 @@ def create_app(config_object=None):
     from app.worker import worker_bp
     from app.main import main_bp
     from app.admin import admin_bp
+    from app.rag import rag_bp, api_query, api_reindex
 
     app.register_blueprint(main_bp)
     app.register_blueprint(auth_bp, url_prefix="/auth")
     app.register_blueprint(customer_bp, url_prefix="/customer")
     app.register_blueprint(worker_bp, url_prefix="/worker")
     app.register_blueprint(admin_bp, url_prefix="/admin")
+    app.register_blueprint(rag_bp)
+
+    # Allow API queries without CSRF session token
+    csrf.exempt(api_query)
+    csrf.exempt(api_reindex)
 
     # Error handlers
     @app.errorhandler(403)

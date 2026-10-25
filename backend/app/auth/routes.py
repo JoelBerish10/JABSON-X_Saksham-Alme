@@ -4,6 +4,7 @@ from app import db
 from app.models import User, Worker, ServiceCategory, WorkerSkill, Availability
 from app.auth import auth_bp
 from datetime import time as dtime
+import re
 
 
 # ---------------------------------------------------------------------------
@@ -184,7 +185,11 @@ def _validate_base_registration(full_name, phone, email, password, confirm):
     if email and User.query.filter_by(email=email).first():
         errors.append("This email address is already registered.")
     if not password or len(password) < 8:
-        errors.append("Password must be at least 8 characters.")
+        errors.append("Password must be at least 8 characters long.")
+    elif not re.search(r"[A-Za-z]", password) or not re.search(r"\d", password):
+        errors.append("Password must contain alphanumeric characters (both letters and numbers).")
+    elif not re.search(r"[^A-Za-z0-9]", password):
+        errors.append("Password must contain at least one special character (e.g. !@#$%^&*).")
     if password != confirm:
         errors.append("Passwords do not match.")
     return errors

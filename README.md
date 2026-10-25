@@ -13,6 +13,7 @@ independent local workers (plumbers, electricians, maids, cooks, carpenters, etc
 | **Customer** | Post jobs, compare offers, accept/reject offers, track booking status, leave reviews |
 | **Worker** | Create profile, set skills & availability, browse matching jobs, submit offers, update booking status |
 | **Admin** | Platform stats, worker verification queue, job/user management |
+| **RAG AI Assistant** | Grounded hyperlocal search & conversational assistant using live DB documents, worker profiles & FAQs |
 | **Design** | Dark-mode glassmorphism, gradient accents, micro-animations, mobile-first |
 
 ---
@@ -25,6 +26,7 @@ backend/
 │   ├── __init__.py         # App factory (Flask extensions + blueprints)
 │   ├── models.py           # SQLAlchemy ORM models
 │   ├── utils.py            # File upload, role decorator
+│   ├── rag.py              # RAG (Retrieval-Augmented Generation) Engine & Blueprint
 │   ├── main/               # Homepage routes
 │   ├── auth/               # Login + registration routes
 │   ├── customer/           # Customer workflow routes
@@ -42,13 +44,14 @@ frontend/
 │   └── uploads/            # Uploaded files and media
 └── templates/
     ├── base.html           # Master layout with navigation & flash alerts
-    ├── main/               # Homepage & static views
+    ├── main/               # Homepage & AI Assistant views
     ├── auth/               # Login & role-based registration
     ├── customer/           # Job post, dashboard, offer compare, booking, reviews
     ├── worker/             # Worker dashboard, job browsing, offers, profile, availability
     ├── admin/              # Admin overview, worker verification, jobs, users
     └── errors/             # Custom 403, 404, 500 error pages
 
+rag.py                      # Root RAG CLI runner & query interface
 run.py                      # Root launcher (runs backend server)
 seed.py                     # Root seed script (populates DB)
 requirements.txt            # Python dependencies

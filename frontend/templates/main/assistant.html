@@ -1,0 +1,575 @@
+{% extends "base.html" %}
+
+{% block title %}AI Assistant | ServeLocal{% endblock %}
+{% block meta_description %}Chat with ServeLocal's AI Assistant to find verified workers, compare service prices, and get answers on hyperlocal home services.{% endblock %}
+
+{% block content %}
+<div class="assistant-container">
+  <!-- Assistant Header Banner -->
+  <div class="assistant-header-card">
+    <div class="assistant-badge-row">
+      <span class="assistant-status-pill">
+        <span class="pulse-dot"></span> Retrieval-Augmented Generation Active
+      </span>
+      <span class="assistant-model-pill" id="engine-status-pill">
+        ⚡ Loading Knowledge Base...
+      </span>
+    </div>
+    <h1 class="assistant-title">🤖 ServeLocal AI Assistant</h1>
+    <p class="assistant-subtitle">
+      Powered by real-time marketplace knowledge. Ask about services, instant quotes, worker availability, or booking procedures.
+    </p>
+
+    <!-- Quick Prompt Pills -->
+    <div class="prompt-chips-wrapper">
+      <span class="chips-label">Popular Questions:</span>
+      <div class="prompt-chips">
+        <button class="prompt-chip" onclick="askPreset('I need an urgent plumber for a leaking pipe in Bengaluru')">
+          🔧 Emergency Plumber
+        </button>
+        <button class="prompt-chip" onclick="askPreset('How much does electrical wiring and fan installation cost?')">
+          ⚡ Electrician Pricing
+        </button>
+        <button class="prompt-chip" onclick="askPreset('What services are covered under House & Deep Cleaning?')">
+          🧹 Deep Cleaning
+        </button>
+        <button class="prompt-chip" onclick="askPreset('How does worker verification and background check work?')">
+          🛡️ Worker Verification
+        </button>
+        <button class="prompt-chip" onclick="askPreset('How do I post a job and get offers?')">
+          📋 How Booking Works
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chat Card -->
+  <div class="assistant-chat-card">
+    <!-- Messages Feed -->
+    <div class="chat-messages" id="chat-messages">
+      <!-- Welcome Message -->
+      <div class="chat-bubble bot-bubble">
+        <div class="bubble-avatar">⚡</div>
+        <div class="bubble-content">
+          <div class="bubble-author">LocalBot · ServeLocal RAG Assistant</div>
+          <div class="bubble-text">
+            👋 Hi there! I'm your AI hyperlocal assistant. I have live access to our verified service categories, local worker profiles in Bengaluru, price guides, and platform rules.
+            <br /><br />
+            How can I help you today?
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Input Form -->
+    <div class="chat-input-area">
+      <form id="rag-chat-form" onsubmit="handleSend(event)">
+        <div class="chat-input-group">
+          <input
+            type="text"
+            id="chat-query-input"
+            class="chat-input-field"
+            placeholder="Type your question (e.g. 'How much does AC maintenance cost?')..."
+            autocomplete="off"
+            required
+          />
+          <button type="submit" class="btn-chat-send" id="btn-chat-send">
+            <span>Send</span>
+            <span class="send-arrow">➔</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<style>
+/* ── Modern Assistant Layout ── */
+.assistant-container {
+  max-width: 980px;
+  margin: 32px auto 60px auto;
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.assistant-header-card {
+  background: linear-gradient(135deg, #FAF5FF 0%, #FFFFFF 100%);
+  border: 1px solid #E9D5FF;
+  border-radius: var(--radius-lg, 20px);
+  padding: 28px 32px;
+  box-shadow: 0 4px 20px rgba(80, 7, 162, 0.05);
+}
+
+.assistant-badge-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.assistant-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #ECFDF5;
+  color: #059669;
+  border: 1px solid #A7F3D0;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #10B981;
+  box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+  animation: pulse-green 2s infinite;
+}
+
+@keyframes pulse-green {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
+.assistant-model-pill {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #6B21A8;
+  background: #F3E8FF;
+  padding: 4px 12px;
+  border-radius: 999px;
+}
+
+.assistant-title {
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: #0F172A;
+  margin: 0 0 8px 0;
+  letter-spacing: -0.02em;
+}
+
+.assistant-subtitle {
+  color: #475569;
+  font-size: 0.98rem;
+  margin: 0 0 20px 0;
+  line-height: 1.5;
+}
+
+.prompt-chips-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.chips-label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #64748B;
+  letter-spacing: 0.04em;
+}
+
+.prompt-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.prompt-chip {
+  background: #FFFFFF;
+  border: 1px solid #CBD5E1;
+  color: #334155;
+  padding: 7px 14px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.prompt-chip:hover {
+  background: #5007A2;
+  color: #FFFFFF;
+  border-color: #5007A2;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(80, 7, 162, 0.18);
+}
+
+/* ── Chat Messages Card ── */
+.assistant-chat-card {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: var(--radius-lg, 20px);
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
+  display: flex;
+  flex-direction: column;
+  min-height: 520px;
+  overflow: hidden;
+}
+
+.chat-messages {
+  flex: 1;
+  padding: 24px 28px;
+  overflow-y: auto;
+  max-height: 540px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background: #FAFBFD;
+}
+
+.chat-bubble {
+  display: flex;
+  gap: 14px;
+  max-width: 88%;
+}
+
+.bot-bubble {
+  align-self: flex-start;
+}
+
+.user-bubble {
+  align-self: flex-end;
+  flex-direction: row-reverse;
+}
+
+.bubble-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+  flex-shrink: 0;
+  background: #5007A2;
+  color: #FFFFFF;
+  box-shadow: 0 4px 10px rgba(80, 7, 162, 0.2);
+}
+
+.user-bubble .bubble-avatar {
+  background: #0F172A;
+  color: #FFFFFF;
+}
+
+.bubble-content {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.bubble-author {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #64748B;
+}
+
+.user-bubble .bubble-author {
+  text-align: right;
+}
+
+.bubble-text {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  padding: 14px 18px;
+  border-radius: 16px;
+  border-top-left-radius: 4px;
+  color: #1E293B;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.03);
+}
+
+.user-bubble .bubble-text {
+  background: #5007A2;
+  color: #FFFFFF;
+  border-color: #5007A2;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 4px;
+  box-shadow: 0 4px 12px rgba(80, 7, 162, 0.2);
+}
+
+/* ── Citations & Action Buttons ── */
+.source-tags-box {
+  margin-top: 10px;
+  padding: 10px 14px;
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+.source-tags-title {
+  font-weight: 700;
+  color: #475569;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.source-tag-item {
+  display: inline-block;
+  background: #E2E8F0;
+  color: #334155;
+  padding: 3px 8px;
+  border-radius: 6px;
+  margin: 2px 4px 2px 0;
+  font-size: 0.76rem;
+  font-weight: 600;
+}
+
+.bubble-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.bubble-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #5007A2;
+  color: #FFFFFF;
+  text-decoration: none;
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.bubble-action-btn:hover {
+  background: #410584;
+  transform: translateY(-1px);
+}
+
+/* ── Chat Input Area ── */
+.chat-input-area {
+  padding: 16px 20px;
+  background: #FFFFFF;
+  border-top: 1px solid #E2E8F0;
+}
+
+.chat-input-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #F8FAFC;
+  border: 1.5px solid #CBD5E1;
+  border-radius: 14px;
+  padding: 6px 8px 6px 16px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.chat-input-group:focus-within {
+  border-color: #5007A2;
+  box-shadow: 0 0 0 4px rgba(80, 7, 162, 0.1);
+  background: #FFFFFF;
+}
+
+.chat-input-field {
+  flex: 1;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 0.96rem;
+  color: #0F172A;
+  font-family: inherit;
+}
+
+.btn-chat-send {
+  background: #5007A2;
+  color: #FFFFFF;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.btn-chat-send:hover {
+  background: #410584;
+  transform: translateY(-1px);
+}
+
+.btn-chat-send:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+</style>
+
+<script>
+// Check RAG engine status on mount
+document.addEventListener('DOMContentLoaded', async () => {
+  try {
+    const res = await fetch('/api/rag/status');
+    const data = await res.json();
+    const pill = document.getElementById('engine-status-pill');
+    if (data.status === 'ready') {
+      const provider = data.gemini_enabled ? 'Gemini AI' : (data.openai_enabled ? 'OpenAI' : 'Local Hybrid Engine');
+      pill.textContent = `📚 ${data.total_documents} documents indexed · ${provider}`;
+    } else {
+      pill.textContent = '⚡ Initializing Index...';
+    }
+  } catch (err) {
+    console.warn('RAG status check:', err);
+  }
+});
+
+function askPreset(question) {
+  const input = document.getElementById('chat-query-input');
+  input.value = question;
+  handleSend(new Event('submit'));
+}
+
+async function handleSend(e) {
+  if (e) e.preventDefault();
+  const input = document.getElementById('chat-query-input');
+  const query = input.value.trim();
+  if (!query) return;
+
+  const messagesContainer = document.getElementById('chat-messages');
+  const sendBtn = document.getElementById('btn-chat-send');
+
+  // Append user bubble
+  appendUserMessage(query);
+  input.value = '';
+  sendBtn.disabled = true;
+
+  // Append temporary typing indicator
+  const typingId = 'typing-' + Date.now();
+  appendTypingIndicator(typingId);
+  messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+  try {
+    const response = await fetch('/api/rag/query', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ query: query, top_k: 3 })
+    });
+
+    const data = await response.json();
+    removeTypingIndicator(typingId);
+
+    if (data.error) {
+      appendBotMessage(`⚠️ ${data.error}`);
+    } else {
+      appendBotMessage(data.answer, data.sources, data.actions, data.provider);
+    }
+  } catch (err) {
+    removeTypingIndicator(typingId);
+    appendBotMessage(`⚠️ Unable to reach AI Assistant server. Please try again.`);
+    console.error(err);
+  } finally {
+    sendBtn.disabled = false;
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+  }
+}
+
+function appendUserMessage(text) {
+  const container = document.getElementById('chat-messages');
+  const bubble = document.createElement('div');
+  bubble.className = 'chat-bubble user-bubble';
+  bubble.innerHTML = `
+    <div class="bubble-avatar">👤</div>
+    <div class="bubble-content">
+      <div class="bubble-author">You</div>
+      <div class="bubble-text">${escapeHtml(text)}</div>
+    </div>
+  `;
+  container.appendChild(bubble);
+  container.scrollTop = container.scrollHeight;
+}
+
+function appendBotMessage(text, sources = [], actions = [], provider = '') {
+  const container = document.getElementById('chat-messages');
+  const bubble = document.createElement('div');
+  bubble.className = 'chat-bubble bot-bubble';
+
+  let sourcesHtml = '';
+  if (sources && sources.length > 0) {
+    const items = sources.map(s => `<span class="source-tag-item">📄 ${escapeHtml(s.title)} (${Math.round(s.score * 100)}%)</span>`).join('');
+    sourcesHtml = `
+      <div class="source-tags-box">
+        <div class="source-tags-title">🔍 Retrieved Knowledge Sources:</div>
+        <div>${items}</div>
+      </div>
+    `;
+  }
+
+  let actionsHtml = '';
+  if (actions && actions.length > 0) {
+    const buttons = actions.map(a => `<a href="${a.url}" class="bubble-action-btn">➔ ${escapeHtml(a.label)}</a>`).join('');
+    actionsHtml = `<div class="bubble-actions">${buttons}</div>`;
+  }
+
+  const providerLabel = provider ? ` · ${provider}` : '';
+
+  bubble.innerHTML = `
+    <div class="bubble-avatar">⚡</div>
+    <div class="bubble-content">
+      <div class="bubble-author">LocalBot${providerLabel}</div>
+      <div class="bubble-text">${formatMarkdownText(text)}</div>
+      ${sourcesHtml}
+      ${actionsHtml}
+    </div>
+  `;
+  container.appendChild(bubble);
+  container.scrollTop = container.scrollHeight;
+}
+
+function appendTypingIndicator(id) {
+  const container = document.getElementById('chat-messages');
+  const typing = document.createElement('div');
+  typing.id = id;
+  typing.className = 'chat-bubble bot-bubble';
+  typing.innerHTML = `
+    <div class="bubble-avatar">⚡</div>
+    <div class="bubble-content">
+      <div class="bubble-author">LocalBot</div>
+      <div class="bubble-text" style="color: #64748B; font-style: italic;">
+        Searching marketplace knowledge & composing response...
+      </div>
+    </div>
+  `;
+  container.appendChild(typing);
+}
+
+function removeTypingIndicator(id) {
+  const el = document.getElementById(id);
+  if (el) el.remove();
+}
+
+function escapeHtml(str) {
+  return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
+function formatMarkdownText(str) {
+  // Simple markdown processor for bold, lists, and linebreaks
+  let formatted = escapeHtml(str);
+  formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+  formatted = formatted.replace(/\*(.*?)\*/g, '<em>$1</em>');
+  formatted = formatted.replace(/\n/g, '<br/>');
+  return formatted;
+}
+</script>
+{% endblock %}

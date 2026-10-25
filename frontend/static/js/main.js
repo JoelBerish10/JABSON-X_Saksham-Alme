@@ -51,6 +51,9 @@ const globalSearch = document.getElementById('global-search-input');
 const searchDropdown = document.getElementById('search-dropdown');
 
 if (globalSearch && searchDropdown) {
+  // Ensure closed on page load
+  searchDropdown.style.display = 'none';
+
   globalSearch.addEventListener('focus', () => {
     searchDropdown.style.display = 'block';
   });
@@ -62,10 +65,19 @@ if (globalSearch && searchDropdown) {
       const text = item.querySelector('.s-text')?.textContent.toLowerCase() || '';
       item.style.display = text.includes(val) ? 'flex' : 'none';
     });
+    searchDropdown.style.display = 'block';
+  });
+
+  // Close when clicking an item
+  searchDropdown.querySelectorAll('.search-item').forEach(item => {
+    item.addEventListener('click', () => {
+      searchDropdown.style.display = 'none';
+    });
   });
 
   document.addEventListener('click', (e) => {
-    if (!document.getElementById('nav-search-bar')?.contains(e.target)) {
+    const searchBar = document.getElementById('nav-search-bar');
+    if (searchBar && !searchBar.contains(e.target)) {
       searchDropdown.style.display = 'none';
     }
   });
@@ -86,7 +98,18 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-// ── 3. Hamburger Navigation Toggle ──
+// ── 3. Theme Toggle (Light / Dark Mode) ──
+const themeToggleBtn = document.getElementById('theme-toggle');
+if (themeToggleBtn) {
+  themeToggleBtn.addEventListener('click', () => {
+    const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('servelocal_theme', newTheme);
+  });
+}
+
+// ── 4. Hamburger Navigation Toggle ──
 const hamburger = document.getElementById('hamburger');
 const navLinks = document.getElementById('nav-links');
 if (hamburger && navLinks) {

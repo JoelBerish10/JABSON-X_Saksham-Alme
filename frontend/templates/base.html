@@ -9,6 +9,12 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+  <script>
+    (function () {
+      var savedTheme = localStorage.getItem('servelocal_theme') || 'light';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    })();
+  </script>
   {% block extra_head %}{% endblock %}
 </head>
 <body class="uc-app">
@@ -20,8 +26,8 @@
       <span class="badge-pulsing-dot"></span>
       <span class="announcement-highlight">Instant Dispatch</span>
     </div>
-    <span class="announcement-text">⚡ Top-rated background checked workers ready in your locality. Flat ₹100 OFF on your first booking with code <strong>SERVE100</strong></span>
-    <a href="#services" class="announcement-link">Explore Services →</a>
+    <span class="announcement-text">Top-rated background-checked workers ready in your locality. Flat ₹100 OFF on your first booking with code <strong>SERVE100</strong></span>
+    <a href="#services" class="announcement-link">Explore Services &rarr;</a>
   </div>
 </div>
 
@@ -31,55 +37,69 @@
     
     <!-- Brand Logo -->
     <a href="{{ url_for('main.index') }}" class="nav-logo">
-      <div class="logo-mark">⚡</div>
+      <div class="logo-mark">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+        </svg>
+      </div>
       <div class="logo-text-group">
         <span class="logo-brand">Serve<strong>Local</strong></span>
         <span class="logo-tagline">HOME SERVICES IN MINUTES</span>
       </div>
     </a>
 
-    <!-- Location Selector (Urban Company / Zepto Style) -->
+    <!-- Location Selector -->
     <div class="nav-location-picker" id="nav-location-btn" onclick="openLocationModal()">
-      <div class="location-icon-bubble">📍</div>
+      <div class="location-icon-bubble">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+          <circle cx="12" cy="10" r="3"></circle>
+        </svg>
+      </div>
       <div class="location-details">
-        <span class="location-label">Service Location</span>
+        <span class="location-label">Location</span>
         <div class="location-selected">
           <strong id="current-location-text">Indiranagar, Bengaluru</strong>
-          <span class="loc-dropdown-chevron">▾</span>
+          <span class="loc-dropdown-chevron">&#9662;</span>
         </div>
       </div>
     </div>
 
-    <!-- Wide Desktop Global Search Bar -->
+    <!-- Desktop Global Search Bar -->
     <div class="nav-search-bar" id="nav-search-bar">
-      <span class="search-icon">🔍</span>
+      <span class="search-icon">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+      </span>
       <input 
         type="text" 
         id="global-search-input" 
-        placeholder="Search for 'AC service', 'Plumber', 'Maid', 'Electrician'..." 
+        placeholder="Search 'AC service', 'Plumber'..." 
         autocomplete="off" 
       />
-      <span class="search-shortcut">⌘K</span>
+      <span class="search-shortcut">Ctrl+K</span>
       <!-- Live Dropdown Results -->
       <div class="search-dropdown" id="search-dropdown" style="display: none;">
         <div class="search-drop-section-title">Popular Services</div>
         <a href="{{ url_for('customer.post_job') if current_user.is_authenticated and current_user.role == 'customer' else url_for('auth.register_customer') }}" class="search-item">
-          <span class="s-icon">🔧</span>
+          <span class="s-icon-dot bg-blue"></span>
           <span class="s-text">Plumbing & Leak Repairs</span>
           <span class="s-badge">Starts ₹199</span>
         </a>
         <a href="{{ url_for('customer.post_job') if current_user.is_authenticated and current_user.role == 'customer' else url_for('auth.register_customer') }}" class="search-item">
-          <span class="s-icon">⚡</span>
+          <span class="s-icon-dot bg-amber"></span>
           <span class="s-text">Electrician & Wiring</span>
           <span class="s-badge">Starts ₹149</span>
         </a>
         <a href="{{ url_for('customer.post_job') if current_user.is_authenticated and current_user.role == 'customer' else url_for('auth.register_customer') }}" class="search-item">
-          <span class="s-icon">🧹</span>
+          <span class="s-icon-dot bg-teal"></span>
           <span class="s-text">House & Kitchen Deep Cleaning</span>
           <span class="s-badge">Starts ₹399</span>
         </a>
         <a href="{{ url_for('customer.post_job') if current_user.is_authenticated and current_user.role == 'customer' else url_for('auth.register_customer') }}" class="search-item">
-          <span class="s-icon">❄️</span>
+          <span class="s-icon-dot bg-cyan"></span>
           <span class="s-text">AC Servicing & Cooling Faults</span>
           <span class="s-badge">Starts ₹499</span>
         </a>
@@ -89,22 +109,50 @@
     <!-- Nav Links & Profile Actions -->
     <ul class="nav-links" id="nav-links">
       <li><a href="{{ url_for('main.index') }}" class="nav-item-link">Home</a></li>
-      <li><a href="#services" class="nav-item-link">All Services</a></li>
+      <li>
+        <a href="{{ url_for('rag.assistant_page') }}" class="nav-item-link nav-ai-pill" id="nav-assistant-link">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2l2.4 7.4H22l-6 4.6 2.3 7.2-6.3-4.6-6.3 4.6 2.3-7.2-6-4.6h7.6z"/>
+          </svg>
+          <span>AI Assistant</span>
+        </a>
+      </li>
+      <li><a href="#services" class="nav-item-link nav-hide-md">Services</a></li>
+
+      <!-- Theme Toggle (Light / Dark) -->
+      <li>
+        <button class="theme-toggle-btn" id="theme-toggle" type="button" aria-label="Toggle theme" title="Toggle Light / Dark Mode">
+          <svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+      </li>
       
       {% if current_user.is_authenticated %}
         {% if current_user.role == 'customer' %}
           <li><a href="{{ url_for('customer.dashboard') }}" class="nav-item-link">My Bookings</a></li>
           <li>
             <a href="{{ url_for('customer.post_job') }}" class="btn-primary-compact" id="nav-post-job-cta">
-              <span>+ Post a Request</span>
+              <span>+ Post Request</span>
             </a>
           </li>
         {% elif current_user.role == 'worker' %}
-          <li><a href="{{ url_for('worker.dashboard') }}" class="nav-item-link">Jobs Board</a></li>
+          <li><a href="{{ url_for('worker.dashboard') }}" class="nav-item-link">Jobs</a></li>
           <li><a href="{{ url_for('worker.edit_profile') }}" class="nav-item-link">Profile</a></li>
           <li><a href="{{ url_for('worker.manage_availability') }}" class="nav-item-link">Availability</a></li>
         {% elif current_user.role == 'admin' %}
-          <li><a href="{{ url_for('admin.dashboard') }}" class="nav-item-link">🛡️ Admin Panel</a></li>
+          <li><a href="{{ url_for('admin.dashboard') }}" class="nav-item-link">Admin Panel</a></li>
         {% endif %}
 
         <!-- User Chip -->
@@ -122,8 +170,8 @@
       {% else %}
         <li>
           <a href="{{ url_for('auth.register_worker') }}" class="nav-partner-link" id="nav-worker-register">
-            <span class="partner-badge">Partner</span>
-            <span>Join as Pro</span>
+            <span class="partner-badge">PRO</span>
+            <span>Join</span>
           </a>
         </li>
         <li>
@@ -152,7 +200,7 @@
         <h3>Choose your city</h3>
         <p>Serving 12,000+ pin codes across major metropolitan hubs</p>
       </div>
-      <button class="modal-close-btn" onclick="closeLocationModal()">×</button>
+      <button class="modal-close-btn" onclick="closeLocationModal()">&times;</button>
     </div>
     
     <div class="modal-search-city">
@@ -161,28 +209,28 @@
 
     <div class="popular-cities-grid">
       <div class="city-card active" onclick="selectCity('Indiranagar, Bengaluru')">
-        <span class="city-icon">🏙️</span>
+        <span class="city-dot bg-indigo"></span>
         <span class="city-name">Bengaluru</span>
         <span class="city-badge">Fastest Dispatch</span>
       </div>
       <div class="city-card" onclick="selectCity('Andheri West, Mumbai')">
-        <span class="city-icon">🌊</span>
+        <span class="city-dot bg-blue"></span>
         <span class="city-name">Mumbai</span>
       </div>
       <div class="city-card" onclick="selectCity('Connaught Place, Delhi NCR')">
-        <span class="city-icon">🏛️</span>
+        <span class="city-dot bg-amber"></span>
         <span class="city-name">Delhi NCR</span>
       </div>
       <div class="city-card" onclick="selectCity('Banjara Hills, Hyderabad')">
-        <span class="city-icon">🕌</span>
+        <span class="city-dot bg-teal"></span>
         <span class="city-name">Hyderabad</span>
       </div>
       <div class="city-card" onclick="selectCity('Kothrud, Pune')">
-        <span class="city-icon">🌳</span>
+        <span class="city-dot bg-purple"></span>
         <span class="city-name">Pune</span>
       </div>
       <div class="city-card" onclick="selectCity('T. Nagar, Chennai')">
-        <span class="city-icon">⚓</span>
+        <span class="city-dot bg-coral"></span>
         <span class="city-name">Chennai</span>
       </div>
     </div>
@@ -196,10 +244,10 @@
     {% for category, message in messages %}
     <div class="flash flash-{{ category }}" role="alert">
       <span class="flash-icon">
-        {% if category == 'success' %}✓{% elif category == 'danger' %}✗{% elif category == 'warning' %}⚠{% else %}ℹ{% endif %}
+        {% if category == 'success' %}&#10003;{% elif category == 'danger' %}&#10007;{% elif category == 'warning' %}&#9888;{% else %}&#8505;{% endif %}
       </span>
       <span class="flash-msg">{{ message }}</span>
-      <button class="flash-close" onclick="this.parentElement.remove()">×</button>
+      <button class="flash-close" onclick="this.parentElement.remove()">&times;</button>
     </div>
     {% endfor %}
   </div>
@@ -218,28 +266,46 @@
     <div class="footer-container">
       <div class="trust-pill-grid">
         <div class="trust-item">
-          <div class="trust-icon">🛡️</div>
+          <div class="trust-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+          </div>
           <div class="trust-meta">
             <strong>100% Verified Professionals</strong>
-            <span>Rigorous police & background checks</span>
+            <span>Rigorous background & identity checks</span>
           </div>
         </div>
         <div class="trust-item">
-          <div class="trust-icon">⚡</div>
+          <div class="trust-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+          </div>
           <div class="trust-meta">
             <strong>Rapid 15–30 Min Response</strong>
-            <span>Direct nearby worker matching</span>
+            <span>Direct nearby worker dispatch</span>
           </div>
         </div>
         <div class="trust-item">
-          <div class="trust-icon">💳</div>
+          <div class="trust-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+              <line x1="2" y1="10" x2="22" y2="10"></line>
+            </svg>
+          </div>
           <div class="trust-meta">
             <strong>Transparent Fixed Pricing</strong>
             <span>Zero hidden charges, pay after job</span>
           </div>
         </div>
         <div class="trust-item">
-          <div class="trust-icon">⭐</div>
+          <div class="trust-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+            </svg>
+          </div>
           <div class="trust-meta">
             <strong>30-Day Service Guarantee</strong>
             <span>Free rework if you're not satisfied</span>
@@ -252,17 +318,16 @@
   <div class="footer-container footer-body">
     <div class="footer-column brand-column">
       <div class="footer-brand">
-        <span class="footer-logo-mark">⚡</span>
+        <span class="footer-logo-mark">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+          </svg>
+        </span>
         <span class="footer-brand-title">Serve<strong>Local</strong></span>
       </div>
       <p class="footer-desc">
         India's modern hyperlocal service marketplace connecting homeowners with independent, trusted local workers for urgent repairs, installations, and daily household maintenance.
       </p>
-      <div class="footer-socials">
-        <span class="social-circle">📱</span>
-        <span class="social-circle">💬</span>
-        <span class="social-circle">✉️</span>
-      </div>
     </div>
 
     <div class="footer-column">
@@ -277,33 +342,30 @@
 
     <div class="footer-column">
       <h4>For Customers</h4>
-      <a href="{{ url_for('auth.register_customer') }}">Register as Customer</a>
-      <a href="{{ url_for('auth.login') }}">Customer Sign In</a>
-      {% if current_user.is_authenticated and current_user.role == 'customer' %}
-        <a href="{{ url_for('customer.post_job') }}">Post a Service Request</a>
-        <a href="{{ url_for('customer.dashboard') }}">Track Active Bookings</a>
-      {% endif %}
-      <a href="#how-it-works">How Pricing Works</a>
-      <a href="#safety">Customer Safety Charter</a>
+      <a href="{{ url_for('customer.post_job') if current_user.is_authenticated and current_user.role == 'customer' else url_for('auth.register_customer') }}">Post a Job Request</a>
+      <a href="{{ url_for('rag.assistant_page') }}">AI Assistant Help</a>
+      <a href="#safety">Safety & Verification</a>
+      <a href="#pricing">Pricing Guidelines</a>
+      <a href="#faq">Frequently Asked Questions</a>
     </div>
 
     <div class="footer-column">
-      <h4>For Professionals</h4>
-      <a href="{{ url_for('auth.register_worker') }}" class="highlight-link">Join as a Service Partner</a>
-      <a href="{{ url_for('auth.login') }}">Worker Partner Login</a>
-      <a href="#why-us">Zero Commission Policy</a>
-      <a href="#why-us">Flexible Hours & Work Radius</a>
-      <a href="#safety">Partner Standards</a>
+      <h4>For Partners</h4>
+      <a href="{{ url_for('auth.register_worker') }}">Register as Service Pro</a>
+      <a href="{{ url_for('auth.login') }}">Partner Portal Login</a>
+      <a href="#partner-benefits">Zero Brokerage Benefits</a>
+      <a href="#standards">Service Quality Standards</a>
     </div>
   </div>
 
   <div class="footer-bottom">
-    <div class="footer-container bottom-flex">
-      <p>&copy; 2026 ServeLocal Marketplace Technologies India Pvt Ltd. All rights reserved.</p>
+    <div class="footer-container bottom-inner">
+      <p>&copy; {{ now().year if now is defined else '2026' }} ServeLocal Technologies Inc. All rights reserved.</p>
       <div class="bottom-links">
         <a href="#">Privacy Policy</a>
         <a href="#">Terms of Service</a>
         <a href="#">Safety Guidelines</a>
+        <a href="#">Trust & Verification</a>
       </div>
     </div>
   </div>
