@@ -8,7 +8,6 @@
   <!-- Job summary card -->
   <div class="job-detail-card">
     <div class="job-detail-header">
-      <div class="job-detail-icon">{{ job.category.icon }}</div>
       <div class="job-detail-info">
         <span class="status-badge status-{{ job.status }} status-lg">{{ job.status.replace('_',' ').title() }}</span>
         <h1>{{ job.title }}</h1>
@@ -23,14 +22,14 @@
       <p class="job-description">{{ job.description }}</p>
       {% if job.budget_min or job.budget_max %}
       <p class="job-budget">
-        💰 Budget:
+        Budget:
         {% if job.budget_min and job.budget_max %}₹{{ job.budget_min|int }} – ₹{{ job.budget_max|int }}
         {% elif job.budget_max %}Up to ₹{{ job.budget_max|int }}
         {% else %}From ₹{{ job.budget_min|int }}{% endif %}
       </p>
       {% endif %}
       {% if job.preferred_time %}
-      <p class="job-time">🗓️ Preferred time: {{ job.preferred_time.strftime('%d %b %Y, %I:%M %p') }}</p>
+      <p class="job-time">Preferred time: {{ job.preferred_time.strftime('%d %b %Y, %I:%M %p') }}</p>
       {% endif %}
       {% if job.photo_filename %}
       <img src="{{ url_for('static', filename='uploads/' + job.photo_filename) }}" alt="Job photo" class="job-photo" />
@@ -53,7 +52,7 @@
   <!-- Booking status if confirmed -->
   {% if booking %}
   <div class="section-card">
-    <h2 class="section-card-title">📦 Booking Status</h2>
+    <h2 class="section-card-title">Booking Status</h2>
     <div class="booking-status-tracker">
       {% set statuses = ['confirmed','worker_on_the_way','in_progress','completed'] %}
       {% for s in statuses %}
@@ -73,7 +72,7 @@
   <!-- Offers -->
   <div class="section-card">
     <h2 class="section-card-title">
-      💼 Worker Offers
+      Worker Offers
       {% if offers %}
       <span class="offer-count-badge">{{ offers|length }}</span>
       {% endif %}
@@ -90,7 +89,7 @@
               <strong>{{ offer.worker.user.full_name }}</strong>
               <span>{{ offer.worker.experience_years }} yr{% if offer.worker.experience_years != 1 %}s{% endif %} exp · {{ offer.worker.city or '—' }}</span>
               {% if offer.worker.average_rating %}
-              <span class="rating-stars">⭐ {{ offer.worker.average_rating }}</span>
+              <span class="rating-stars">Rating: {{ offer.worker.average_rating }}/5</span>
               {% endif %}
             </div>
           </a>
@@ -101,7 +100,7 @@
         </div>
 
         {% if offer.estimated_arrival_minutes %}
-        <p class="offer-eta">⏱ Est. arrival: ~{{ offer.estimated_arrival_minutes }} min <span class="est-note">(estimate only)</span></p>
+        <p class="offer-eta">Est. arrival: ~{{ offer.estimated_arrival_minutes }} min <span class="est-note">(estimate only)</span></p>
         {% endif %}
 
         {% if offer.message %}
@@ -121,11 +120,11 @@
           <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
           <button type="submit" class="btn btn-primary btn-full" id="accept-offer-btn-{{ offer.id }}"
                   onclick="return confirm('Accept this offer from {{ offer.worker.user.full_name }} for ₹{{ offer.quoted_price|int }}?');">
-            ✓ Accept This Offer
+            Accept This Offer
           </button>
         </form>
         {% elif offer.status == 'accepted' %}
-        <p class="offer-accepted-note">✓ You accepted this offer</p>
+        <p class="offer-accepted-note">You accepted this offer</p>
         {% endif %}
       </div>
       {% endfor %}
@@ -133,7 +132,6 @@
 
     {% else %}
     <div class="empty-state">
-      <div class="empty-icon">⏳</div>
       <p>No offers yet. Workers will be notified of your request.</p>
       <p class="empty-hint">If no workers respond within 24 hours, try widening the budget or choosing a scheduled time.</p>
     </div>

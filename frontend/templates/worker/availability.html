@@ -6,7 +6,7 @@
   <a href="{{ url_for('worker.dashboard') }}" class="back-link">← Dashboard</a>
   <div class="form-card">
     <div class="auth-header">
-      <div class="auth-logo">🗓️</div>
+      <div class="auth-logo">(GS)</div>
       <h1>Set Availability</h1>
       <p>Choose the days and hours you are available for jobs.</p>
     </div>
@@ -27,13 +27,11 @@
           <div class="avail-times {% if not avail or not avail.is_available %}avail-times-hidden{% endif %}"
                id="avail-times-{{ day }}">
             <div class="input-wrapper">
-              <span class="input-icon">⏰</span>
               <input type="time" name="start_{{ day }}" id="start_{{ day }}"
                      value="{{ avail.start_time.strftime('%H:%M') if avail else '09:00' }}" />
             </div>
             <span class="avail-to">to</span>
             <div class="input-wrapper">
-              <span class="input-icon">⏰</span>
               <input type="time" name="end_{{ day }}" id="end_{{ day }}"
                      value="{{ avail.end_time.strftime('%H:%M') if avail else '18:00' }}" />
             </div>

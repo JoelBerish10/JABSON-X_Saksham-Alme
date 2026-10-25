@@ -448,18 +448,17 @@ class ServeLocalRAG:
             )
 
         response_parts = []
-        response_parts.append("Here is the relevant information from **ServeLocal**:\n")
+        response_parts.append("Here is the relevant information from **GharSeva**:\n")
 
         for res in retrieved:
             doc = res.document
             if doc.doc_type == "category":
-                icon = doc.metadata.get("icon", "🔧")
                 name = doc.metadata.get("category_name", doc.title)
-                response_parts.append(f"• **{icon} {name}**: {doc.content}")
+                response_parts.append(f"• **{name}**: {doc.content}")
             elif doc.doc_type == "worker":
                 name = doc.metadata.get("name", "Verified Worker")
                 rating = doc.metadata.get("rating")
-                rating_str = f"⭐ {rating} / 5" if rating else "⭐ New Pro"
+                rating_str = f"Rating: {rating} / 5" if rating else "New Pro"
                 response_parts.append(f"• **{name}** ({rating_str}): {doc.content}")
             elif doc.doc_type in ("faq", "policy"):
                 response_parts.append(f"• **{doc.title}**: {doc.content}")

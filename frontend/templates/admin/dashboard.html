@@ -4,7 +4,7 @@
 {% block content %}
 <div class="dashboard-page">
   <div class="dashboard-header">
-    <h1>🛡️ Admin Panel</h1>
+    <h1>Admin Panel</h1>
     <div class="dashboard-header-actions">
       <a href="{{ url_for('admin.workers') }}" class="btn btn-outline">Workers</a>
       <a href="{{ url_for('admin.jobs') }}" class="btn btn-outline">Jobs</a>
@@ -38,7 +38,7 @@
 
   <!-- Pending verification -->
   <section class="section-card">
-    <h2 class="section-card-title">⏳ Workers Pending Verification ({{ pending_workers|length }})</h2>
+    <h2 class="section-card-title">Workers Pending Verification ({{ pending_workers|length }})</h2>
     {% if pending_workers %}
     <div class="job-list">
       {% for worker in pending_workers %}
@@ -64,11 +64,10 @@
 
   <!-- Recent jobs -->
   <section class="section-card">
-    <h2 class="section-card-title">📋 Recent Jobs</h2>
+    <h2 class="section-card-title">Recent Jobs</h2>
     <div class="job-list">
       {% for job in recent_jobs %}
       <div class="job-list-item" id="admin-job-{{ job.id }}">
-        <div class="job-list-icon">{{ job.category.icon }}</div>
         <div class="job-list-body">
           <span class="job-list-title">{{ job.title }}</span>
           <span class="job-list-meta">{{ job.category.name }} · {{ job.location_text or '—' }}</span>

@@ -5,7 +5,7 @@
 <div class="auth-page">
   <div class="auth-card auth-card-wide">
     <div class="auth-header">
-      <div class="auth-logo">🔧</div>
+      <div class="auth-logo">(GS)</div>
       <h1>Register as Worker</h1>
       <p>Set up your profile and start receiving job requests</p>
     </div>
@@ -18,7 +18,6 @@
         <div class="form-group">
           <label for="full_name">Full Name <span class="req">*</span></label>
           <div class="input-wrapper">
-            <span class="input-icon">👤</span>
             <input type="text" id="full_name" name="full_name" required placeholder="Your full name"
                    value="{{ form_data.get('full_name', '') }}" />
           </div>
@@ -26,7 +25,6 @@
         <div class="form-group">
           <label for="phone">Phone Number <span class="req">*</span></label>
           <div class="input-wrapper">
-            <span class="input-icon">📞</span>
             <input type="tel" id="phone" name="phone" required placeholder="10-digit mobile"
                    value="{{ form_data.get('phone', '') }}" />
           </div>
@@ -36,7 +34,6 @@
       <div class="form-group">
         <label for="email">Email <span class="optional">(optional)</span></label>
         <div class="input-wrapper">
-          <span class="input-icon">✉️</span>
           <input type="email" id="email" name="email" placeholder="your@email.com"
                  value="{{ form_data.get('email', '') }}" />
         </div>
@@ -46,15 +43,13 @@
         <div class="form-group">
           <label for="password">Password <span class="req">*</span></label>
           <div class="input-wrapper">
-            <span class="input-icon">🔒</span>
             <input type="password" id="password" name="password" required placeholder="Min 8 chars" />
-            <button type="button" class="toggle-password" onclick="togglePassword('password')" aria-label="Show">👁</button>
+            <button type="button" class="toggle-password" onclick="togglePassword('password')" aria-label="Show">Show</button>
           </div>
         </div>
         <div class="form-group">
           <label for="confirm_password">Confirm Password <span class="req">*</span></label>
           <div class="input-wrapper">
-            <span class="input-icon">🔒</span>
             <input type="password" id="confirm_password" name="confirm_password" required placeholder="Repeat" />
           </div>
         </div>
@@ -70,7 +65,6 @@
           <label class="checkbox-card" for="cat_{{ cat.id }}">
             <input type="checkbox" id="cat_{{ cat.id }}" name="categories" value="{{ cat.id }}"
                    {% if form_data.getlist and cat.id|string in form_data.getlist('categories') %}checked{% endif %} />
-            <span class="cb-icon">{{ cat.icon }}</span>
             <span class="cb-label">{{ cat.name }}</span>
           </label>
           {% endfor %}
@@ -86,7 +80,6 @@
         <div class="form-group">
           <label for="experience_years">Years of Experience</label>
           <div class="input-wrapper">
-            <span class="input-icon">📅</span>
             <input type="number" id="experience_years" name="experience_years" min="0" max="50"
                    value="{{ form_data.get('experience_years', '0') }}" />
           </div>
@@ -94,7 +87,6 @@
         <div class="form-group">
           <label for="service_radius_km">Service Radius (km)</label>
           <div class="input-wrapper">
-            <span class="input-icon">📍</span>
             <input type="number" id="service_radius_km" name="service_radius_km" min="1" max="100" step="0.5"
                    value="{{ form_data.get('service_radius_km', '10') }}" />
           </div>
@@ -105,15 +97,13 @@
         <div class="form-group">
           <label for="city">City</label>
           <div class="input-wrapper">
-            <span class="input-icon">🏙️</span>
-            <input type="text" id="city" name="city" placeholder="e.g. Bengaluru"
+            <input type="text" id="city" name="city" placeholder="e.g. Mumbai"
                    value="{{ form_data.get('city', '') }}" />
           </div>
         </div>
         <div class="form-group">
           <label for="preferred_language">Preferred Language</label>
           <div class="input-wrapper">
-            <span class="input-icon">🌐</span>
             <select id="preferred_language" name="preferred_language">
               <option value="en">English</option>
               <option value="hi">हिन्दी</option>
@@ -127,7 +117,6 @@
       </div>
 
       <div class="info-box">
-        <span>ℹ️</span>
         <p>You can set detailed availability, rates, and upload documents after registration. Identity documents are stored securely and never shown publicly. Uploading a document alone does not imply verification.</p>
       </div>
 

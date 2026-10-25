@@ -40,9 +40,9 @@
   <!-- Details -->
   <div class="detail-grid">
     <div class="section-card">
-      <h2 class="section-card-title">📋 Job Details</h2>
+      <h2 class="section-card-title">Job Details</h2>
       <table class="detail-table">
-        <tr><th>Service</th><td>{{ booking.job.category.icon }} {{ booking.job.category.name }}</td></tr>
+        <tr><th>Service</th><td>{{ booking.job.category.name }}</td></tr>
         <tr><th>Job</th><td>{{ booking.job.title }}</td></tr>
         <tr><th>Description</th><td>{{ booking.job.description }}</td></tr>
         <tr><th>Location</th><td>{{ booking.job.location_text or '—' }}</td></tr>
@@ -55,13 +55,13 @@
     </div>
 
     <div class="section-card">
-      <h2 class="section-card-title">👤 Customer</h2>
+      <h2 class="section-card-title">Customer</h2>
       <div class="worker-summary">
         <div class="worker-summary-avatar">{{ booking.customer.full_name[0].upper() }}</div>
         <div class="worker-summary-info">
           <strong>{{ booking.customer.full_name }}</strong>
           {% if booking.status in ('confirmed','worker_on_the_way','in_progress','completed') %}
-          <span>📞 {{ booking.customer.phone }}</span>
+          <span>Phone: {{ booking.customer.phone }}</span>
           {% endif %}
         </div>
       </div>

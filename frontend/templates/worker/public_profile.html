@@ -8,11 +8,11 @@
       <div class="worker-public-avatar">{{ worker.user.full_name[0].upper() }}</div>
       <div class="worker-public-info">
         <h1>{{ worker.user.full_name }}</h1>
-        <p class="worker-public-city">📍 {{ worker.city or 'Location not specified' }}</p>
+        <p class="worker-public-city">{{ worker.city or 'Location not specified' }}</p>
         <div class="worker-public-badges">
           <span class="ver-badge ver-{{ worker.verification_status }}">{{ worker.verification_status.replace('_',' ').title() }}</span>
           {% if worker.average_rating %}
-          <span class="rating-pill">⭐ {{ worker.average_rating }} / 5</span>
+          <span class="rating-pill">Rating: {{ worker.average_rating }} / 5</span>
           {% endif %}
           <span class="exp-pill">{{ worker.experience_years }} yr exp</span>
           <span class="jobs-pill">{{ worker.total_bookings }} jobs done</span>
@@ -32,7 +32,6 @@
       <div class="skills-tags">
         {% for skill in worker.skills %}
         <div class="skill-tag">
-          <span class="skill-tag-icon">{{ skill.category.icon }}</span>
           <span>{{ skill.category.name }}</span>
           {% if skill.rate_description %}
           <span class="skill-rate">{{ skill.rate_description }}</span>
@@ -54,7 +53,7 @@
     </div>
 
     <div class="worker-radius">
-      <span>📡 Service radius: {{ worker.service_radius_km }} km</span>
+      <span>Service radius: {{ worker.service_radius_km }} km</span>
     </div>
   </div>
 

@@ -26,7 +26,6 @@
         <div class="hero-quick-search-box">
           <form action="{{ url_for('customer.post_job') if current_user.is_authenticated and current_user.role == 'customer' else url_for('auth.register_customer') }}" method="GET" class="hero-search-form">
             <div class="hero-search-input-group">
-              <span class="h-search-icon">🔍</span>
               <input 
                 type="text" 
                 name="title" 
@@ -42,17 +41,16 @@
 
           <div class="hero-trending-chips">
             <span class="chips-label">Popular now:</span>
-            <a href="{{ url_for('customer.post_job') if current_user.is_authenticated and current_user.role == 'customer' else url_for('auth.register_customer') }}" class="trending-chip">🔧 Tap Leakage</a>
-            <a href="{{ url_for('customer.post_job') if current_user.is_authenticated and current_user.role == 'customer' else url_for('auth.register_customer') }}" class="trending-chip">⚡ Switchboard Fix</a>
-            <a href="{{ url_for('customer.post_job') if current_user.is_authenticated and current_user.role == 'customer' else url_for('auth.register_customer') }}" class="trending-chip">🧹 Deep Cleaning</a>
-            <a href="{{ url_for('customer.post_job') if current_user.is_authenticated and current_user.role == 'customer' else url_for('auth.register_customer') }}" class="trending-chip">❄️ AC Jet Servicing</a>
+            <a href="{{ url_for('customer.post_job') if current_user.is_authenticated and current_user.role == 'customer' else url_for('auth.register_customer') }}" class="trending-chip">Tap Leakage</a>
+            <a href="{{ url_for('customer.post_job') if current_user.is_authenticated and current_user.role == 'customer' else url_for('auth.register_customer') }}" class="trending-chip">Switchboard Fix</a>
+            <a href="{{ url_for('customer.post_job') if current_user.is_authenticated and current_user.role == 'customer' else url_for('auth.register_customer') }}" class="trending-chip">Deep Cleaning</a>
+            <a href="{{ url_for('customer.post_job') if current_user.is_authenticated and current_user.role == 'customer' else url_for('auth.register_customer') }}" class="trending-chip">AC Jet Servicing</a>
           </div>
         </div>
 
         <!-- Hero Stats Row -->
         <div class="hero-guarantee-row">
           <div class="guarantee-item">
-            <span class="g-icon">🛡️</span>
             <div class="g-text">
               <strong>30-Day Guarantee</strong>
               <span>Free rework promise</span>
@@ -60,7 +58,6 @@
           </div>
           <div class="guarantee-sep"></div>
           <div class="guarantee-item">
-            <span class="g-icon">⚡</span>
             <div class="g-text">
               <strong>15-Min Matching</strong>
               <span>Rapid local dispatch</span>
@@ -68,7 +65,6 @@
           </div>
           <div class="guarantee-sep"></div>
           <div class="guarantee-item">
-            <span class="g-icon">💰</span>
             <div class="g-text">
               <strong>Direct Fixed Quotes</strong>
               <span>Zero middleman commission</span>
@@ -90,7 +86,7 @@
               <h4 class="widget-title">Nearby Verified Pros Ready</h4>
               <p class="widget-subtitle">Andheri West · Within 5 km radius</p>
             </div>
-            <span class="live-eta-badge">⚡ ~20 min ETA</span>
+            <span class="live-eta-badge">~20 min ETA</span>
           </div>
 
           <div class="pro-preview-list">
@@ -98,13 +94,13 @@
             <!-- Pro 1 -->
             <div class="pro-preview-card">
               <div class="pro-avatar-wrap">
-                <div class="pro-avatar bg-amber">👨‍🔧</div>
+                <div class="pro-avatar bg-amber">RK</div>
                 <span class="pro-verified-tick" title="Police & Skill Verified">✓</span>
               </div>
               <div class="pro-info">
                 <div class="pro-name-row">
                   <strong class="pro-name">Ramesh Kumar</strong>
-                  <span class="pro-rating-pill">★ 4.8 (420)</span>
+                  <span class="pro-rating-pill">4.8 (420)</span>
                 </div>
                 <p class="pro-specialty">Plumbing & Water Leak Specialist · 5 yrs exp</p>
                 <div class="pro-meta-pills">
@@ -117,13 +113,13 @@
             <!-- Pro 2 -->
             <div class="pro-preview-card">
               <div class="pro-avatar-wrap">
-                <div class="pro-avatar bg-indigo">⚡</div>
+                <div class="pro-avatar bg-indigo">SS</div>
                 <span class="pro-verified-tick" title="Certified Wireman">✓</span>
               </div>
               <div class="pro-info">
                 <div class="pro-name-row">
                   <strong class="pro-name">Sanjay Sharma</strong>
-                  <span class="pro-rating-pill">★ 4.9 (680)</span>
+                  <span class="pro-rating-pill">4.9 (680)</span>
                 </div>
                 <p class="pro-specialty">Licensed Electrician & Appliance Repair · 8 yrs exp</p>
                 <div class="pro-meta-pills">
@@ -136,13 +132,13 @@
             <!-- Pro 3 -->
             <div class="pro-preview-card">
               <div class="pro-avatar-wrap">
-                <div class="pro-avatar bg-teal">🧹</div>
+                <div class="pro-avatar bg-teal">AD</div>
                 <span class="pro-verified-tick" title="Background Checked">✓</span>
               </div>
               <div class="pro-info">
                 <div class="pro-name-row">
                   <strong class="pro-name">Anita Devi</strong>
-                  <span class="pro-rating-pill">★ 4.9 (810)</span>
+                  <span class="pro-rating-pill">4.9 (810)</span>
                 </div>
                 <p class="pro-specialty">Deep Cleaning & Sanitization Pro · 4 yrs exp</p>
                 <div class="pro-meta-pills">
@@ -192,7 +188,6 @@
           <p>Use code <strong>SERVE100</strong> at quote confirmation</p>
           <a href="#services" class="promo-btn">Claim Offer →</a>
         </div>
-        <div class="promo-icon-art">🎁</div>
       </div>
 
       <div class="promo-banner-card promo-gradient-blue">
@@ -202,7 +197,6 @@
           <p>Double cooling boost with anti-bacterial pressure wash</p>
           <a href="#services" class="promo-btn">Starts @ ₹499 →</a>
         </div>
-        <div class="promo-icon-art">❄️</div>
       </div>
 
       <div class="promo-banner-card promo-gradient-emerald">
@@ -212,7 +206,6 @@
           <p>Every booking backed by our hassle-free customer protection guarantee</p>
           <a href="#why-us" class="promo-btn">Learn More →</a>
         </div>
-        <div class="promo-icon-art">🛡️</div>
       </div>
 
     </div>
@@ -241,9 +234,6 @@
     <div class="uc-category-grid">
       {% for cat in categories %}
       <a href="{{ url_for('customer.post_job') if current_user.is_authenticated and current_user.role == 'customer' else url_for('auth.register_customer') }}" class="uc-cat-card">
-        <div class="cat-icon-container">
-          <span class="cat-emoji">{{ cat.icon }}</span>
-        </div>
         <div class="cat-body">
           <h3 class="cat-title">{{ cat.name }}</h3>
           <span class="cat-price-hint">Starts from ₹199</span>
@@ -276,8 +266,7 @@
       <!-- Service 1 -->
       <div class="service-package-card">
         <div class="package-card-top">
-          <div class="package-icon-bubble">🔧</div>
-          <span class="package-rating-badge">★ 4.8 (8.4k)</span>
+          <span class="package-rating-badge">4.8 (8.4k)</span>
         </div>
         <h3 class="package-title">Tap, Sink & Pipe Leakage Repair</h3>
         <p class="package-desc">Complete inspection, gasket change, washer replacement, and pressure test.</p>
@@ -300,8 +289,7 @@
       <!-- Service 2 -->
       <div class="service-package-card">
         <div class="package-card-top">
-          <div class="package-icon-bubble">⚡</div>
-          <span class="package-rating-badge">★ 4.9 (12k)</span>
+          <span class="package-rating-badge">4.9 (12k)</span>
         </div>
         <h3 class="package-title">Switchboard, Fan & MCB Repair</h3>
         <p class="package-desc">Troubleshooting short circuits, socket burnt issues, regulator & fan installation.</p>
@@ -325,8 +313,7 @@
       <div class="service-package-card highlight-package">
         <div class="package-tag-ribbon">POPULAR</div>
         <div class="package-card-top">
-          <div class="package-icon-bubble">🧹</div>
-          <span class="package-rating-badge">★ 4.8 (15k)</span>
+          <span class="package-rating-badge">4.8 (15k)</span>
         </div>
         <h3 class="package-title">Intense Kitchen & Bathroom Cleaning</h3>
         <p class="package-desc">Tile descaling, oil grime removal, chrome polishing, and deep floor scrubbing.</p>
@@ -349,8 +336,7 @@
       <!-- Service 4 -->
       <div class="service-package-card">
         <div class="package-card-top">
-          <div class="package-icon-bubble">❄️</div>
-          <span class="package-rating-badge">★ 4.9 (21k)</span>
+          <span class="package-rating-badge">4.9 (21k)</span>
         </div>
         <h3 class="package-title">Split AC Foam Jet Deep Wash</h3>
         <p class="package-desc">Indoor coil pressure jet spray, drainage unclog, gas pressure check & filter sanitization.</p>
@@ -391,7 +377,6 @@
       
       <div class="stepper-step">
         <div class="step-badge">1</div>
-        <div class="step-visual-icon">📝</div>
         <h4 class="step-title">Describe Your Request</h4>
         <p class="step-text">Select your service, choose urgent or scheduled arrival, and describe the issue with an optional photo.</p>
       </div>
@@ -400,7 +385,6 @@
 
       <div class="stepper-step">
         <div class="step-badge">2</div>
-        <div class="step-visual-icon">🎯</div>
         <h4 class="step-title">Get Direct Quotes</h4>
         <p class="step-text">Nearby active pros view your request and send honest quotes with their exact estimated time of arrival.</p>
       </div>
@@ -409,7 +393,6 @@
 
       <div class="stepper-step">
         <div class="step-badge">3</div>
-        <div class="step-visual-icon">⚖️</div>
         <h4 class="step-title">Compare &amp; Confirm</h4>
         <p class="step-text">Review ratings, past job photos, and price quotes. Accept the pro that fits your budget best.</p>
       </div>
@@ -418,7 +401,6 @@
 
       <div class="stepper-step">
         <div class="step-badge">4</div>
-        <div class="step-visual-icon">⭐</div>
         <h4 class="step-title">Job Done &amp; Reviewed</h4>
         <p class="step-text">The pro arrives, completes the service cleanly, and you settle payment directly after you are 100% satisfied.</p>
       </div>
@@ -445,25 +427,25 @@
     <div class="uc-trust-pillars-grid">
       
       <div class="trust-pillar-card">
-        <div class="pillar-icon bg-indigo">🛡️</div>
+        <div class="pillar-icon bg-indigo">01</div>
         <h3>Trained &amp; Police Verified</h3>
         <p>Every worker on our platform undergoes government ID verification, criminal background scrutiny, and hands-on skill evaluation before receiving customer jobs.</p>
       </div>
 
       <div class="trust-pillar-card">
-        <div class="pillar-icon bg-emerald">💰</div>
+        <div class="pillar-icon bg-emerald">02</div>
         <h3>Transparent Fixed Pricing</h3>
         <p>No sudden shock charges on arrival. Workers submit upfront quotes that include labor and standard diagnostic inspection.</p>
       </div>
 
       <div class="trust-pillar-card">
-        <div class="pillar-icon bg-purple">⚡</div>
+        <div class="pillar-icon bg-purple">03</div>
         <h3>Availability-Aware Matching</h3>
         <p>We never send your job to inactive workers. Our live dispatch radar matches only workers who are on-duty and within your specific neighborhood.</p>
       </div>
 
       <div class="trust-pillar-card">
-        <div class="pillar-icon bg-rose">🤝</div>
+        <div class="pillar-icon bg-rose">04</div>
         <h3>Worker Autonomy &amp; Dignity</h3>
         <p>Workers set their own pricing, hours, and service radius. We do not deduct extortionate middleman commissions, resulting in happier, motivated workers.</p>
       </div>
@@ -500,7 +482,7 @@
               <h4>{{ worker.user.full_name }}</h4>
               <span class="verified-tag">✓ Verified Pro</span>
             </div>
-            <p class="spotlight-city">📍 {{ worker.city or 'Mumbai' }} · {{ worker.experience_years }} yrs experience</p>
+            <p class="spotlight-city">{{ worker.city or 'Mumbai' }} · {{ worker.experience_years }} yrs experience</p>
           </div>
         </div>
 

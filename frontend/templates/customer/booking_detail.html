@@ -26,9 +26,9 @@
   <!-- Booking details -->
   <div class="detail-grid">
     <div class="section-card">
-      <h2 class="section-card-title">📋 Job Details</h2>
+      <h2 class="section-card-title">Job Details</h2>
       <table class="detail-table">
-        <tr><th>Service</th><td>{{ booking.job.category.icon }} {{ booking.job.category.name }}</td></tr>
+        <tr><th>Service</th><td>{{ booking.job.category.name }}</td></tr>
         <tr><th>Job</th><td>{{ booking.job.title }}</td></tr>
         <tr><th>Description</th><td>{{ booking.job.description }}</td></tr>
         <tr><th>Location</th><td>{{ booking.job.location_text or '—' }}</td></tr>
@@ -44,7 +44,7 @@
     </div>
 
     <div class="section-card">
-      <h2 class="section-card-title">👷 Worker</h2>
+      <h2 class="section-card-title">Worker</h2>
       <div class="worker-summary">
         <div class="worker-summary-avatar">{{ booking.worker.user.full_name[0].upper() }}</div>
         <div class="worker-summary-info">
@@ -52,7 +52,7 @@
           <span>{{ booking.worker.city or '—' }}</span>
           <span>{{ booking.worker.experience_years }} yr exp</span>
           {% if booking.worker.average_rating %}
-          <span>⭐ {{ booking.worker.average_rating }}</span>
+          <span>Rating: {{ booking.worker.average_rating }}/5</span>
           {% endif %}
           <span class="ver-badge ver-{{ booking.worker.verification_status }}">{{ booking.worker.verification_status.title() }}</span>
         </div>
@@ -66,7 +66,7 @@
   <!-- Review section -->
   {% if booking.status == 'completed' %}
   <div class="section-card">
-    <h2 class="section-card-title">⭐ Review</h2>
+    <h2 class="section-card-title">Customer Review</h2>
     {% if booking.review %}
     <div class="review-display">
       <div class="star-display">

@@ -9,7 +9,7 @@
     <div class="dash-hero-left">
       <div class="dash-avatar-lg">{{ current_user.full_name[0] | upper }}</div>
       <div>
-        <h1>Welcome back, {{ current_user.full_name.split()[0] }} 👋</h1>
+        <h1>Welcome back, {{ current_user.full_name.split()[0] }}</h1>
         <p class="dashboard-subtitle">Your home services dashboard</p>
       </div>
     </div>
@@ -57,7 +57,7 @@
   <!-- Job Requests List -->
   <section class="section-card">
     <div class="section-card-header">
-      <h2 class="section-card-title">📋 My Job Requests</h2>
+      <h2 class="section-card-title">My Job Requests</h2>
       {% if jobs %}
       <span class="section-card-count">{{ jobs | length }} total</span>
       {% endif %}
@@ -84,7 +84,6 @@
     </div>
     {% else %}
     <div class="empty-state">
-      <div class="empty-icon">📋</div>
       <h3>No service requests yet</h3>
       <p>Post your first request and get instant quotes from verified local professionals.</p>
       <a href="{{ url_for('customer.post_job') }}" class="btn btn-primary" id="empty-post-btn">Post Your First Request</a>

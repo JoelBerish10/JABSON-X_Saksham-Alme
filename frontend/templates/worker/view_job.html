@@ -8,7 +8,6 @@
 
   <div class="job-detail-card">
     <div class="job-detail-header">
-      <div class="job-detail-icon">{{ job.category.icon }}</div>
       <div class="job-detail-info">
         <span class="status-badge status-{{ job.status }}">{{ job.status.replace('_',' ').title() }}</span>
         <h2>{{ job.title }}</h2>
@@ -20,16 +19,16 @@
     </div>
     <div class="job-detail-body">
       <p class="job-description">{{ job.description }}</p>
-      <p>📍 Area: {{ job.location_text or 'Exact address shared after booking' }}</p>
+      <p>Area: {{ job.location_text or 'Exact address shared after booking' }}</p>
       {% if job.budget_min or job.budget_max %}
-      <p>💰 Customer budget:
+      <p>Customer budget:
         {% if job.budget_min and job.budget_max %}₹{{ job.budget_min|int }} – ₹{{ job.budget_max|int }}
         {% elif job.budget_max %}Up to ₹{{ job.budget_max|int }}
         {% else %}From ₹{{ job.budget_min|int }}{% endif %}
       </p>
       {% endif %}
       {% if job.preferred_time %}
-      <p>🗓️ Preferred time: {{ job.preferred_time.strftime('%d %b %Y, %I:%M %p') }}</p>
+      <p>Preferred time: {{ job.preferred_time.strftime('%d %b %Y, %I:%M %p') }}</p>
       {% endif %}
       {% if job.photo_filename %}
       <img src="{{ url_for('static', filename='uploads/' + job.photo_filename) }}" alt="Job photo" class="job-photo" />
@@ -68,7 +67,6 @@
       <div class="form-group">
         <label for="quoted_price">Your Price Quote (₹) <span class="req">*</span></label>
         <div class="input-wrapper">
-          <span class="input-icon">₹</span>
           <input type="number" id="quoted_price" name="quoted_price" min="1" step="10" required placeholder="e.g. 500" />
         </div>
       </div>
@@ -76,7 +74,6 @@
       <div class="form-group">
         <label for="estimated_arrival_minutes">Estimated Arrival (minutes) <span class="optional">(optional)</span></label>
         <div class="input-wrapper">
-          <span class="input-icon">⏱️</span>
           <input type="number" id="estimated_arrival_minutes" name="estimated_arrival_minutes" min="1" placeholder="e.g. 30" />
         </div>
         <p class="form-hint">Only enter if you can genuinely estimate it. This will be shown as an estimate to the customer.</p>
@@ -94,7 +91,6 @@
   </div>
   {% else %}
   <div class="info-box">
-    <span>ℹ️</span>
     <p>This job is no longer accepting new offers.</p>
   </div>
   {% endif %}

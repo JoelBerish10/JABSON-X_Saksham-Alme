@@ -18,16 +18,16 @@ from app.models import ServiceCategory, User, Worker, WorkerSkill, Availability
 from datetime import time as dtime
 
 CATEGORIES = [
-    {"name": "Plumbing",               "icon": "🔧", "description": "Leaking taps, blocked drains, pipe fitting, tank installation."},
-    {"name": "Electrical Services",    "icon": "⚡", "description": "Wiring, fan/light installation, fuse issues, inverter fitting."},
-    {"name": "Maid & House Cleaning",  "icon": "🧹", "description": "Sweeping, mopping, deep cleaning, kitchen/bathroom cleaning."},
-    {"name": "Cooks & Kitchen Help",   "icon": "🍳", "description": "Daily meals, meal prep, vegetarian/non-veg cooking, event catering."},
-    {"name": "Carpentry",              "icon": "🪚", "description": "Door repairs, furniture fix, shelves, custom woodwork."},
-    {"name": "Appliance Repair",       "icon": "🔌", "description": "Washing machines, fridges, ACs, water purifiers, microwaves."},
-    {"name": "Painting & Renovation",  "icon": "🎨", "description": "Wall painting, putty work, crack repair, waterproofing."},
-    {"name": "AC & Cooling Services",  "icon": "❄️", "description": "Servicing, installation, filter cleaning, cooling faults."},
-    {"name": "Gardening",              "icon": "🌿", "description": "Lawn care, plant maintenance, garden design."},
-    {"name": "Pest Control",           "icon": "🐛", "description": "Insect and rodent control for homes and offices."},
+    {"name": "Plumbing",               "icon": "", "description": "Leaking taps, blocked drains, pipe fitting, tank installation."},
+    {"name": "Electrical Services",    "icon": "", "description": "Wiring, fan/light installation, fuse issues, inverter fitting."},
+    {"name": "Maid & House Cleaning",  "icon": "", "description": "Sweeping, mopping, deep cleaning, kitchen/bathroom cleaning."},
+    {"name": "Cooks & Kitchen Help",   "icon": "", "description": "Daily meals, meal prep, vegetarian/non-veg cooking, event catering."},
+    {"name": "Carpentry",              "icon": "", "description": "Door repairs, furniture fix, shelves, custom woodwork."},
+    {"name": "Appliance Repair",       "icon": "", "description": "Washing machines, fridges, ACs, water purifiers, microwaves."},
+    {"name": "Painting & Renovation",  "icon": "", "description": "Wall painting, putty work, crack repair, waterproofing."},
+    {"name": "AC & Cooling Services",  "icon": "", "description": "Servicing, installation, filter cleaning, cooling faults."},
+    {"name": "Gardening",              "icon": "", "description": "Lawn care, plant maintenance, garden design."},
+    {"name": "Pest Control",           "icon": "", "description": "Insect and rodent control for homes and offices."},
 ]
 
 app = create_app()

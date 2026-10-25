@@ -24,7 +24,6 @@
             <input type="radio" id="cat_radio_{{ cat.id }}" name="category_id" value="{{ cat.id }}"
                    {% if form_data.get('category_id')|string == cat.id|string %}checked{% endif %}
                    required />
-            <span class="cat-radio-icon">{{ cat.icon }}</span>
             <span class="cat-radio-label">{{ cat.name }}</span>
           </label>
           {% endfor %}
@@ -34,7 +33,6 @@
       <div class="form-group">
         <label for="title">Job Title <span class="req">*</span></label>
         <div class="input-wrapper">
-          <span class="input-icon">📝</span>
           <input type="text" id="title" name="title" required
                  placeholder="e.g. Fix leaking kitchen tap"
                  value="{{ form_data.get('title', '') }}" maxlength="200" />
@@ -52,7 +50,6 @@
         <div class="file-upload-area" id="photo-upload-area">
           <input type="file" id="photo" name="photo" accept="image/*" class="file-input" />
           <div class="file-upload-ui">
-            <span class="file-icon">📷</span>
             <span class="file-text">Click or drag to upload a photo</span>
             <span class="file-hint">JPG, PNG, WebP — max 5 MB</span>
           </div>
@@ -65,9 +62,8 @@
       <div class="form-group">
         <label for="location_text">Service Location <span class="req">*</span></label>
         <div class="input-wrapper">
-          <span class="input-icon">📍</span>
           <input type="text" id="location_text" name="location_text" required
-                 placeholder="e.g. 12, MG Road, Bengaluru"
+                 placeholder="e.g. 12, Marine Drive, Mumbai"
                  value="{{ form_data.get('location_text', '') }}" />
         </div>
       </div>
@@ -76,7 +72,6 @@
         <div class="form-group">
           <label for="urgency">Urgency</label>
           <div class="input-wrapper">
-            <span class="input-icon">⏱️</span>
             <select id="urgency" name="urgency">
               <option value="urgent" {% if form_data.get('urgency','urgent') == 'urgent' %}selected{% endif %}>Urgent — ASAP</option>
               <option value="scheduled" {% if form_data.get('urgency') == 'scheduled' %}selected{% endif %}>Scheduled</option>
@@ -87,7 +82,6 @@
         <div class="form-group" id="preferred-time-group">
           <label for="preferred_time">Preferred Date &amp; Time <span class="optional">(optional)</span></label>
           <div class="input-wrapper">
-            <span class="input-icon">🗓️</span>
             <input type="datetime-local" id="preferred_time" name="preferred_time"
                    value="{{ form_data.get('preferred_time', '') }}" />
           </div>
@@ -100,7 +94,6 @@
         <div class="form-group">
           <label for="budget_min">Minimum Budget (₹) <span class="optional">(optional)</span></label>
           <div class="input-wrapper">
-            <span class="input-icon">₹</span>
             <input type="number" id="budget_min" name="budget_min" min="0" step="50"
                    placeholder="e.g. 200" value="{{ form_data.get('budget_min', '') }}" />
           </div>
@@ -108,7 +101,6 @@
         <div class="form-group">
           <label for="budget_max">Maximum Budget (₹) <span class="optional">(optional)</span></label>
           <div class="input-wrapper">
-            <span class="input-icon">₹</span>
             <input type="number" id="budget_max" name="budget_max" min="0" step="50"
                    placeholder="e.g. 800" value="{{ form_data.get('budget_max', '') }}" />
           </div>
@@ -116,7 +108,6 @@
       </div>
 
       <div class="info-box">
-        <span>💡</span>
         <p>Your exact address will only be shared with a worker after you confirm a booking.</p>
       </div>
 
