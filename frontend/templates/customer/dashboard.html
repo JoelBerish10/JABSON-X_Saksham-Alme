@@ -48,8 +48,7 @@
   <div class="quick-cats">
     {% for cat in categories %}
     <a href="{{ url_for('customer.post_job') }}" class="quick-cat" title="{{ cat.name }}">
-      <span>{{ cat.icon }}</span>
-      <small>{{ cat.name.split()[0] }}</small>
+      <span>{{ cat.name }}</span>
     </a>
     {% endfor %}
   </div>
